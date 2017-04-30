@@ -16,6 +16,7 @@ function Player() {
     this.config = function (Object) {
         Myself.playList = Object.playList;
         Myself.canvasId = Object.canvasId;
+        Myself.autoPlay=Object.autoPlay;
         //记录是否处理过音频,保证createMediaElementSource只创建一次,多次创建会出现错误
         Myself.handle = 0;
         createParts();
@@ -58,9 +59,13 @@ function Player() {
         }
         windowAudioContext();
         loadSound();
+        //开启自动播放
+        if(Myself.autoPlay){
+            play();
+        }
     }
 
-    //加载音频对象方法
+    //加载地址方法,初次使用
     function loadSound() {
         var playList = Myself.playList;
         //把列表第一个mp3地址设置到audio上
