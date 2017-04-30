@@ -1,22 +1,40 @@
 html, body {
-	height: 100%;
+    height: 100%;
     margin: 0;
     font-family: arial, "Microsoft YaHei";
     background-color: #272822;
     color: #FEFEFE;
 }
-#fileWrapper{
-	transition:all 0.5s ease;
-}
-#fileWrapper:hover{
-	opacity: 1!important;
+
+body {
+    background-repeat: no-repeat;
+    background-image: url("images/bg_1.jpg");
 }
 
-#visualizer_wrapper{
-	text-align: center;
+#fileWrapper {
+    transition: all 0.5s ease;
 }
-footer{
-	position: fixed;
-	bottom: 2px;
-	color:#aaa;
+
+#fileWrapper:hover {
+    opacity: 1 !important;
+}
+
+#visualizer_wrapper {
+    text-align: center;
+}
+
+footer {
+    position: fixed;
+    bottom: 2px;
+    color: #aaa;
+}
+
+.playBox {
+    position: fixed;
+    width: 1000px;
+    height: 60px;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }

@@ -21,3 +21,29 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+#player{
+    width: 100%;
+    height: 100%;
+    background: #272822;
+}
+#playerControl{
+    position: absolute;
+    height: 32px;
+    width: 30%;
+    top: 30%;
+    margin:0 0.5%;
+    align-items:center;
+}
+#playerControl i{
+    margin: 0 5px;
+    font-size: 32px;
+    cursor: pointer;
+    color: #A7A7A7;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+#playerControl i:hover{
+    color: #FFFFFF;
+}
