@@ -29,6 +29,9 @@
 <div class="playBox">
     <div id="player">
         <div id="playerControl"></div>
+        <div id="playerShow">
+            <div id="playerTime"></div>
+        </div>
     </div>
 </div>
 </body>
@@ -52,13 +55,16 @@
         canvasId: "show"
     });
     //随机背景
-    var bgArray = [
-        'images/bg_1.jpg',
-        'images/bg_2.jpg',
-        'images/bg_3.jpg',
-        'images/bg_4.jpg',
-    ];
-    document.body.style.background = "url(" + bgArray[Math.floor(Math.random() * bgArray.length)] + ")";
-    document.body.style.backgroundSize = "100% 100%";
+    function changBg() {
+        var bgArray = [
+            'images/bg_1.jpg',
+            'images/bg_2.jpg',
+            'images/bg_3.jpg',
+            'images/bg_4.jpg',
+        ];
+        document.body.style.background = "url(" + bgArray[Math.floor(Math.random() * bgArray.length)] + ")";
+        document.body.style.backgroundSize = "100% 100%";
+    }
+    changBg();
 </script>
 </html>

@@ -1,13 +1,15 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:0.1.0.2017430_Alpha
+ * 版本号:0.2.0.20170501_Alpha
  * Author：PoppinRubo
  * License: MIT
  */
 
 //创建一个对象方法
 function Player() {
+    //时间计时器
+    var timer;
     //先把自己用变量储存起来,后面要用
     var Myself = this;
     //频谱配置,外部调用就开始进行处理
@@ -15,7 +17,7 @@ function Player() {
         Myself.playList = Object.playList;
         Myself.canvasId = Object.canvasId;
         //记录是否处理过音频,保证createMediaElementSource只创建一次,多次创建会出现错误
-        Myself.handle=0;
+        Myself.handle = 0;
         createParts();
     }
 
@@ -43,6 +45,8 @@ function Player() {
         var control = document.getElementById("playerControl");
         control.innerHTML = '<i class="icon-play" data="play" id="playControl" title="播放">&#xeaa8</i><i class="icon-play" id="playNext" title="下一首">&#xeab0</i>';
         var playControl = document.getElementById("playControl");
+        var playerTime = document.getElementById("playerTime");
+        Myself.playerTime = playerTime;
         //播放,暂停
         playControl.onclick = function () {
             play();
@@ -82,19 +86,31 @@ function Player() {
         //播放控制
         if (Myself.audio.paused) {
             Myself.audio.play();
-            //处理播放数据
-            if(Myself.handle==0){
+            timer=setInterval(function () {
+                showTime();
+            }, 1000);
+            //处理播放数据,处理过就不再处理
+            if (Myself.handle == 0) {
                 playHandle();
             }
         } else {
+            window.clearInterval(timer);
             Myself.audio.pause();
         }
+    }
+
+    //显示时长
+    function showTime() {
+        var duration = Myself.audio.duration;
+        var currentTime = Myself.audio.currentTime;
+        var time = duration - currentTime;
+        Myself.playerTime.innerHTML = "-&nbsp;" + Math.floor(time / 60) + ":" + (time % 60 / 100).toFixed(2).slice(-2) + "&nbsp;/&nbsp;" + Math.floor(duration / 60) + ":" + (duration % 60 / 100).toFixed(2).slice(-2);
     }
 
     //播放下一首
     function next() {
         //记录当前播放在数组里的位置位置移动,增加
-        Myself.nowPlay =Myself.nowPlay+1;
+        Myself.nowPlay = Myself.nowPlay + 1;
         //取出mp3地址
         Myself.audio.src = Myself.playList[Myself.nowPlay].mp3;
         play();
@@ -111,7 +127,7 @@ function Player() {
         analyser.connect(audioContext.destination);
         //接下来把分析器传出去创建频谱
         drawSpectrum(analyser);
-        Myself.handle=1;
+        Myself.handle = 1;
     }
 
     //画出频谱

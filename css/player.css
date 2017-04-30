@@ -29,7 +29,7 @@
 #playerControl{
     position: absolute;
     height: 32px;
-    width: 30%;
+    width: 20%;
     top: 30%;
     margin:0 0.5%;
     align-items:center;
@@ -46,4 +46,17 @@
 }
 #playerControl i:hover{
     color: #FFFFFF;
+}
+#playerShow{
+    position: absolute;
+    font-size: 14px;
+    font-family: arial, "Microsoft YaHei";
+    left: 20%;
+    height: 32px;
+    width:10%;
+    text-align: center;
+    line-height: 32px;
+    top: 20%;
+    margin:0 0.5%;
+    align-items:center;
 }
