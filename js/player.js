@@ -109,6 +109,10 @@ function Player() {
 
     //播放下一首
     function next() {
+        //数组播放最后移动到最前
+        if(Myself.nowPlay==Myself.playList.length-1){
+            Myself.nowPlay=-1;
+        }
         //记录当前播放在数组里的位置位置移动,增加
         Myself.nowPlay = Myself.nowPlay + 1;
         //取出mp3地址
