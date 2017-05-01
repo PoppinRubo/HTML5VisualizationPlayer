@@ -51,49 +51,49 @@
     -ms-user-select: none;
     user-select: none;
 }
-#playerTime{
+
+#playerTime {
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
+
 #playerControl i:hover {
     color: #FFFFFF;
 }
-#songInfo{
+
+#songInfo {
     position: absolute;
-    height: 35px;
-    width: 29%;
-    left: 1%;
-    top:5px;
+    border-bottom: 1px solid #575656;
+    height: 25px;
+    width: 100%;
+    left: 0;
+    top:0;
 }
-#songInfo #songTitle,#artist,#album,span{
+
+#songInfo #songTitle, #artist, #album, span {
+    margin: 0 5px;
     cursor: default;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    height: 35px;
+    height: 100%;
     font-size: 14px;
-    line-height: 35px;
+    line-height: 25px;
     float: left;
 }
-#songInfo #songTitle{
-    width: 45%;
-}
-#songInfo #album{
-    width: 20%;
+
+#songInfo #album, #artist {
     font-size: 12px;
 }
-#songInfo #artist{
-    width: 25%;
-    font-size: 12px;
-}
-#songInfo span{
-    width: 3%;
+
+#songInfo span {
     text-align: center;
     font-weight: bold;
     margin: 0 5px;
 }
+
 #playerShow {
     position: absolute;
     font-size: 14px;
@@ -101,7 +101,7 @@
     height: 50px;
     width: 70%;
     top: 30%;
-    margin: 0 0  0 0.5%;
+    margin: 0 0 0 0.5%;
     cursor: default;
 }
 
@@ -139,10 +139,12 @@
     background: #5a5a5a;
     cursor: pointer;
 }
-#volumeBox:hover #volumeBar{
+
+#volumeBox:hover #volumeBar {
     background: #FFFFFF;
 }
-#volumeBox #volumeBar #volumeSize{
+
+#volumeBox #volumeBar #volumeSize {
     position: absolute;
     left: 0;
     bottom: 0;
