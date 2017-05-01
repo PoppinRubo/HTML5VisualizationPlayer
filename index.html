@@ -38,11 +38,17 @@
 <script>
     var play = new Player();
     play.config({
-        autoPlay:false,//自动播放
-        playList: [
+        autoPlay: false,//自动播放
+        canvasId: "show",//canvas标签id
+        button:{//设置生成的控制按钮
+            prev:true,//上一首
+            play:true,//播放,暂停
+            next:true//下一首
+        },
+        playList: [//播放列表,mp3地址不可跨域,需要在服务器模式下
             {
-                title: "1",
-                mp3: "music/1.mp3",
+                title: "1",//音乐标题
+                mp3: "music/1.mp3",//音乐路径
             },
             {
                 title: "2",
@@ -51,9 +57,12 @@
             {
                 title: "3",
                 mp3: "music/3.mp3",
+            },
+            {
+                title: "4",
+                mp3: "music/4.mp3",
             }
-        ],
-        canvasId: "show"
+        ]
     });
     //随机背景
     function changBg() {

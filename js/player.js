@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:0.2.0.20170501_Alpha
+ * 版本号:0.3.0.20170501_Alpha
  * Author：PoppinRubo
  * License: MIT
  */
@@ -12,11 +12,18 @@ function Player() {
     var timer;
     //先把自己用变量储存起来,后面要用
     var Myself = this;
+    //默认设置
+    Myself.button = {//设置生成的控制按钮,默认开启
+        prev: true,//上一首
+        play: true,//播放,暂停
+        next: true//下一首
+    }
     //频谱配置,外部调用就开始进行处理
     this.config = function (Object) {
         Myself.playList = Object.playList;
         Myself.canvasId = Object.canvasId;
-        Myself.autoPlay=Object.autoPlay;
+        Myself.autoPlay = Object.autoPlay;
+        Myself.button = Object.button;
         //记录是否处理过音频,保证createMediaElementSource只创建一次,多次创建会出现错误
         Myself.handle = 0;
         createParts();
@@ -44,54 +51,90 @@ function Player() {
         Myself.audio = audio;
         //创建控制按钮
         var control = document.getElementById("playerControl");
-        control.innerHTML = '<i class="icon-play" data="play" id="playControl" title="播放">&#xeaa8</i><i class="icon-play" id="playNext" title="下一首">&#xeab0</i>';
-        var playControl = document.getElementById("playControl");
+        var button = Myself.button;
+        if (button.prev) {
+            //上一首,按钮创建
+            var prevBtn = document.createElement('i');
+            prevBtn.className = "icon-previous";
+            prevBtn.id = "playPrev";
+            prevBtn.title = "上一首";
+            prevBtn.innerHTML = "&#xeaaf";
+            control.appendChild(prevBtn);
+            //上一首,控制
+            var playPrev = document.getElementById("playPrev");
+            playPrev.onclick = function () {
+                prev();
+            }
+        }
+        if (button.play) {
+            //播放,暂停,按钮创建
+            var playBtn = document.createElement('i');
+            playBtn.className = "icon-play";
+            playBtn.id = "playControl";
+            playBtn.title = "播放";
+            playBtn.innerHTML = "&#xeaa8";
+            playBtn.setAttribute('data','play');
+            control.appendChild(playBtn);
+            //播放,暂停,控制
+            var playControl = document.getElementById("playControl");
+            playControl.onclick = function () {
+                play();
+            }
+        }
+        if (button.next) {
+            //下一首,按钮创建
+            var nextBtn = document.createElement('i');
+            nextBtn.className = "icon-next";
+            nextBtn.id = "playNext";
+            nextBtn.title = "下一首";
+            nextBtn.innerHTML = "&#xeab0";
+            control.appendChild(nextBtn);
+            //下一首,控制
+            var playNext = document.getElementById("playNext");
+            playNext.onclick = function () {
+                next();
+            }
+        }
+        //显示时间
         var playerTime = document.getElementById("playerTime");
         Myself.playerTime = playerTime;
-        //播放,暂停
-        playControl.onclick = function () {
-            play();
-        }
-        //下一首
-        var playNext = document.getElementById("playNext");
-        playNext.onclick = function () {
-            next();
-        }
-        windowAudioContext();
-        loadSound();
-        //开启自动播放
-        if(Myself.autoPlay){
-            play();
-        }
-    }
 
-    //加载地址方法,初次使用
-    function loadSound() {
+        //调用实例化AudioContext
+        windowAudioContext();
+
+        //加载地址方法,audio加入一个初始地址
         var playList = Myself.playList;
         //把列表第一个mp3地址设置到audio上
         Myself.audio.src = playList[0].mp3;
         //记录当前播放在数组里的位置
         Myself.nowPlay = 0;
+
+        //设置自动播放,开始播放
+        if (Myself.autoPlay) {
+            play();
+        }
     }
 
     //播放,暂停 控制
     function play() {
-        var playBtn = document.getElementById("playControl");
-        var data = playBtn.getAttribute("data");
-        //字符图标变化
-        if (data == "play") {
-            playBtn.setAttribute("data", "pause");
-            playBtn.title = "暂停";
-            playBtn.innerHTML = "&#xeaa9";
-        } else {
-            playBtn.setAttribute("data", "play");
-            playBtn.title = "播放";
-            playBtn.innerHTML = "&#xeaa8"
+        if (Myself.button.play) {//判断是否设置播放按钮
+            var playBtn = document.getElementById("playControl");
+            var data = playBtn.getAttribute("data");
+            //字符图标变化
+            if (data == "play") {
+                playBtn.setAttribute("data", "pause");
+                playBtn.title = "暂停";
+                playBtn.innerHTML = "&#xeaa9";
+            } else {
+                playBtn.setAttribute("data", "play");
+                playBtn.title = "播放";
+                playBtn.innerHTML = "&#xeaa8"
+            }
         }
         //播放控制
         if (Myself.audio.paused) {
             Myself.audio.play();
-            timer=setInterval(function () {
+            timer = setInterval(function () {
                 showTime();
             }, 1000);
             //处理播放数据,处理过就不再处理
@@ -112,11 +155,24 @@ function Player() {
         Myself.playerTime.innerHTML = "-&nbsp;" + Math.floor(time / 60) + ":" + (time % 60 / 100).toFixed(2).slice(-2) + "&nbsp;/&nbsp;" + Math.floor(duration / 60) + ":" + (duration % 60 / 100).toFixed(2).slice(-2);
     }
 
+    //播放上一首
+    function prev() {
+        //数组播放最前移动到最后
+        if (Myself.nowPlay == 0) {
+            Myself.nowPlay = Myself.playList.length;
+        }
+        //记录当前播放在数组里的位置位置移动,减小
+        Myself.nowPlay = Myself.nowPlay - 1;
+        //取出mp3地址
+        Myself.audio.src = Myself.playList[Myself.nowPlay].mp3;
+        play();
+    }
+
     //播放下一首
     function next() {
         //数组播放最后移动到最前
-        if(Myself.nowPlay==Myself.playList.length-1){
-            Myself.nowPlay=-1;
+        if (Myself.nowPlay == Myself.playList.length - 1) {
+            Myself.nowPlay = -1;
         }
         //记录当前播放在数组里的位置位置移动,增加
         Myself.nowPlay = Myself.nowPlay + 1;
