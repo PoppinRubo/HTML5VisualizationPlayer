@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:0.8.0.20170501_Alpha
+ * 版本号:0.8.5.20170501_Alpha
  * Author：PoppinRubo
  * License: MIT
  */
@@ -194,12 +194,12 @@ function Player() {
             //字符图标变化
             if (data == "play") {
                 playBtn.setAttribute("data", "pause");
-                playBtn.title = "暂停";
-                playBtn.innerHTML = "&#xeaa9";
+                playBtn.title = "播放";
+                playBtn.innerHTML = "&#xeaa8";
             } else {
                 playBtn.setAttribute("data", "play");
-                playBtn.title = "播放";
-                playBtn.innerHTML = "&#xeaa8"
+                playBtn.title = "暂停";
+                playBtn.innerHTML = "&#xeaa9"
             }
         }
         //播放控制
