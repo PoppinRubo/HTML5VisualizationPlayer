@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:0.6.0.20170501_Alpha
+ * 版本号:0.7.0.20170501_Alpha
  * Author：PoppinRubo
  * License: MIT
  */
@@ -125,6 +125,7 @@ function Player() {
             volumeBar.onclick = function (event) {
                 volumeChange(event, volumeBar, volumeSize);
             }
+
             //音量,点击控制,静音-恢复
             var volumeBtn = document.getElementById("playVolume");
             volumeBtn.onclick = function () {
@@ -153,9 +154,30 @@ function Player() {
         var playList = Myself.playList;
         //把列表第一个mp3地址设置到audio上
         Myself.audio.src = playList[0].mp3;
+
+        //歌曲信息,创建
+        var songInfo = document.getElementById('songInfo');
+
+        var songTitle = document.createElement('div');
+        songTitle.id = "songTitle";
+        songInfo.appendChild(songTitle);
+
+        var album = document.createElement('div');
+        album.id = "album";
+        songInfo.appendChild(album);
+
+        var span = document.createElement('span');
+        span.innerHTML = "-";
+        songInfo.appendChild(span);
+
+        var artist = document.createElement('div');
+        artist.id = "artist";
+        songInfo.appendChild(artist);
+
         //记录当前播放在数组里的位置
         Myself.nowPlay = 0;
-
+        //信息设置
+        updates();
         //获取存储音量
         Myself.audio.volume = volumeGetCookie();
         //设置自动播放,开始播放
@@ -186,6 +208,8 @@ function Player() {
             timer = setInterval(function () {
                 showTime();
             }, 1000);
+            //播放媒体信息更新
+            updates();
             //处理播放数据,处理过就不再处理
             if (Myself.handle == 0) {
                 playHandle();
@@ -196,6 +220,21 @@ function Player() {
         }
         //事件传出
         Myself.event({eventType: "play", describe: "播放/暂停"});
+    }
+
+    //播放媒体信息更新
+    function updates() {
+        var List = Myself.playList;
+        var nowPlay = Myself.nowPlay;
+        var songTitle = document.getElementById("songTitle");
+        songTitle.innerHTML = List[nowPlay].title;
+        songTitle.title = "歌曲" + List[nowPlay].title;
+        var songAlbum = document.getElementById("album");
+        songAlbum.innerHTML = List[nowPlay].album;
+        songAlbum.title = "所属专辑" + List[nowPlay].title;
+        var songArtist = document.getElementById("artist");
+        songArtist.innerHTML = List[nowPlay].artist;
+        songArtist.title = "艺术家" + List[nowPlay].artist;
     }
 
     //显示时长,进度
@@ -228,7 +267,7 @@ function Player() {
         }
         //记录当前播放在数组里的位置位置移动,减小
         Myself.nowPlay = Myself.nowPlay - 1;
-        //取出mp3地址
+        //媒体url信息更新
         Myself.audio.src = Myself.playList[Myself.nowPlay].mp3;
         //先清除计时避免越点计时越快
         window.clearInterval(timer);
@@ -249,7 +288,7 @@ function Player() {
         }
         //记录当前播放在数组里的位置位置移动,增加
         Myself.nowPlay = Myself.nowPlay + 1;
-        //取出mp3地址
+        //媒体url信息更新
         Myself.audio.src = Myself.playList[Myself.nowPlay].mp3;
         //先清除计时避免越点计时越快
         window.clearInterval(timer);
@@ -313,7 +352,7 @@ function Player() {
         if (arr = document.cookie.match(reg)) {
             volume = unescape(arr[2]);
         } else {
-            volume=0.5;
+            volume = 0.5;
         }
         volumeSize.style.width = volume * 100 + "%";
         return volume;
