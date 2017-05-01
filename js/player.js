@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:0.5.5.20170501_Alpha
+ * 版本号:0.6.0.20170501_Alpha
  * Author：PoppinRubo
  * License: MIT
  */
@@ -17,7 +17,8 @@ function Player() {
         prev: true,//上一首
         play: true,//播放,暂停
         next: true,//下一首
-        volume: true//音量
+        volume: true,//音量
+        progressControl: true//进度控制
     }
     //频谱配置,外部调用就开始进行处理
     this.config = function (Object) {
@@ -53,6 +54,7 @@ function Player() {
         //创建控制按钮
         var control = document.getElementById("playerControl");
         var button = Myself.button;
+
         if (button.prev) {
             //上一首,按钮创建
             var prevBtn = document.createElement('i');
@@ -111,10 +113,20 @@ function Player() {
                 volume();
             }
         }
+
         //显示时间容器
         var playerTime = document.getElementById("playerTime");
-        playerTime.innerHTML="-&nbsp;00:00&nbsp;/&nbsp;00:00&nbsp;&nbsp;&nbsp;&nbsp;0%";
+        playerTime.innerHTML = "-&nbsp;00:00&nbsp;/&nbsp;00:00&nbsp;&nbsp;&nbsp;&nbsp;0%";
         Myself.playerTime = playerTime;
+
+        //进度条
+        if (Myself.button.progressControl) {
+            var progress = document.getElementById("progress");
+            progress.style.cursor = "pointer";
+            progress.onclick = function (event) {
+                progressControl(event,progress);
+            }
+        }
 
         //调用实例化AudioContext
         windowAudioContext();
@@ -172,15 +184,16 @@ function Player() {
         var currentTime = Myself.audio.currentTime;
         //剩余量
         var surplusTime = duration - currentTime;
-        var ratio=((currentTime/duration)*100).toFixed(1);
+        var ratio = ((currentTime / duration) * 100).toFixed(1);
         //将100.00%变为100%
-        ratio=ratio==100.0?100:ratio;
+        ratio = ratio == 100.0 ? 100 : ratio;
         function timeFormat(t) {
             return Math.floor(t / 60) + ":" + (t % 60 / 100).toFixed(2).slice(-2);
         }
-        Myself.playerTime.innerHTML ="-&nbsp;" +timeFormat(surplusTime)+ "&nbsp;/&nbsp;" + timeFormat(duration)+ "&nbsp;&nbsp;&nbsp;&nbsp;" +ratio+"%";
-        document.getElementById("playerProgressBar").style.width=ratio+"%";
-        if(ratio==100){//播放结束就播放就调用下一首
+
+        Myself.playerTime.innerHTML = "-&nbsp;" + timeFormat(surplusTime) + "&nbsp;/&nbsp;" + timeFormat(duration) + "&nbsp;&nbsp;&nbsp;&nbsp;" + ratio + "%";
+        document.getElementById("playerProgressBar").style.width = ratio + "%";
+        if (ratio == 100) {//播放结束就播放就调用下一首
             next();
         }
     }
@@ -235,6 +248,22 @@ function Player() {
         } else {
             Myself.audio.muted = true;
         }
+    }
+
+    //进度点击控制
+    function progressControl(e,progress) {
+        //点击的位置
+        var offsetX= e.offsetX;
+        //获取进度条总长度
+        var width=progress.offsetWidth;
+        //算出占比
+        var proportion=offsetX/width;
+        //把宽的比例换为播放比例,再计算audio播放位置
+        var duration=Myself.audio.duration;
+        var playTime=duration*proportion;
+        //从此处播放
+        Myself.audio.currentTime=playTime;
+
     }
 
     //播放处理,提取数据
