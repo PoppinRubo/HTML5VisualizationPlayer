@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:0.3.0.20170501_Alpha
+ * 版本号:0.4.0.20170501_Alpha
  * Author：PoppinRubo
  * License: MIT
  */
@@ -16,7 +16,8 @@ function Player() {
     Myself.button = {//设置生成的控制按钮,默认开启
         prev: true,//上一首
         play: true,//播放,暂停
-        next: true//下一首
+        next: true,//下一首
+        volume: true//音量
     }
     //频谱配置,外部调用就开始进行处理
     this.config = function (Object) {
@@ -73,7 +74,7 @@ function Player() {
             playBtn.id = "playControl";
             playBtn.title = "播放";
             playBtn.innerHTML = "&#xeaa8";
-            playBtn.setAttribute('data','play');
+            playBtn.setAttribute('data', 'play');
             control.appendChild(playBtn);
             //播放,暂停,控制
             var playControl = document.getElementById("playControl");
@@ -93,6 +94,21 @@ function Player() {
             var playNext = document.getElementById("playNext");
             playNext.onclick = function () {
                 next();
+            }
+        }
+        if (button.volume) {
+            //音量,按钮创建
+            var volumeBtn = document.createElement('i');
+            volumeBtn.className = "icon-volume";
+            volumeBtn.id = "playVolume";
+            volumeBtn.title = "音量";
+            playBtn.setAttribute('data', 'normal');
+            volumeBtn.innerHTML = "&#xeab3";
+            control.appendChild(volumeBtn);
+            //音量,点击控制,静音-恢复
+            var volumeBtn = document.getElementById("playVolume");
+            volumeBtn.onclick = function () {
+                volume();
             }
         }
         //显示时间
@@ -179,6 +195,28 @@ function Player() {
         //取出mp3地址
         Myself.audio.src = Myself.playList[Myself.nowPlay].mp3;
         play();
+    }
+
+    //音量点击控制,静音-恢复
+    function volume() {
+        if (Myself.button.volume) {//判断是否设置音量按钮
+            var volumeBtn = document.getElementById("playVolume");
+            var data = volumeBtn.getAttribute("data");
+            //字符图标变化
+            if (data == "normal") {
+                volumeBtn.setAttribute("data", "mute");
+                volumeBtn.innerHTML = "&#xeab6";
+            } else {
+                volumeBtn.setAttribute("data", "normal");
+                volumeBtn.innerHTML = "&#xeab3"
+            }
+        }
+        //点击音量控制
+        if (Myself.audio.muted) {
+            Myself.audio.muted = false;
+        } else {
+            Myself.audio.muted = true;
+        }
     }
 
     //播放处理,提取数据

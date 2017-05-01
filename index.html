@@ -40,10 +40,11 @@
     play.config({
         autoPlay: false,//自动播放
         canvasId: "show",//canvas标签id
-        button:{//设置生成的控制按钮
+        button:{//设置生成的控制按钮,不设置button默认全部创建
             prev:true,//上一首
             play:true,//播放,暂停
-            next:true//下一首
+            next:true,//下一首
+            volume:true//音量
         },
         playList: [//播放列表,mp3地址不可跨域,需要在服务器模式下
             {
