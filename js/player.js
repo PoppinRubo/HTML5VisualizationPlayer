@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:0.7.0.20170501_Alpha
+ * 版本号:0.7.5.20170501_Alpha
  * Author：PoppinRubo
  * License: MIT
  */
@@ -228,13 +228,13 @@ function Player() {
         var nowPlay = Myself.nowPlay;
         var songTitle = document.getElementById("songTitle");
         songTitle.innerHTML = List[nowPlay].title;
-        songTitle.title = "歌曲" + List[nowPlay].title;
+        songTitle.title = "歌曲:" + List[nowPlay].title;
         var songAlbum = document.getElementById("album");
         songAlbum.innerHTML = List[nowPlay].album;
-        songAlbum.title = "所属专辑" + List[nowPlay].title;
+        songAlbum.title = "所属专辑:" + List[nowPlay].title;
         var songArtist = document.getElementById("artist");
         songArtist.innerHTML = List[nowPlay].artist;
-        songArtist.title = "艺术家" + List[nowPlay].artist;
+        songArtist.title = "艺术家:" + List[nowPlay].artist;
     }
 
     //显示时长,进度
