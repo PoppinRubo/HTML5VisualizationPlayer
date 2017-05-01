@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:0.4.5.20170501_Alpha
+ * 版本号:0.5.5.20170501_Alpha
  * Author：PoppinRubo
  * License: MIT
  */
@@ -111,8 +111,9 @@ function Player() {
                 volume();
             }
         }
-        //显示时间
+        //显示时间容器
         var playerTime = document.getElementById("playerTime");
+        playerTime.innerHTML="-&nbsp;00:00&nbsp;/&nbsp;00:00&nbsp;&nbsp;&nbsp;&nbsp;0%";
         Myself.playerTime = playerTime;
 
         //调用实例化AudioContext
@@ -163,12 +164,25 @@ function Player() {
         }
     }
 
-    //显示时长
+    //显示时长,进度
     function showTime() {
+        //时长总量
         var duration = Myself.audio.duration;
+        //时长进度
         var currentTime = Myself.audio.currentTime;
-        var time = duration - currentTime;
-        Myself.playerTime.innerHTML = "-&nbsp;" + Math.floor(time / 60) + ":" + (time % 60 / 100).toFixed(2).slice(-2) + "&nbsp;/&nbsp;" + Math.floor(duration / 60) + ":" + (duration % 60 / 100).toFixed(2).slice(-2);
+        //剩余量
+        var surplusTime = duration - currentTime;
+        var ratio=((currentTime/duration)*100).toFixed(1);
+        //将100.00%变为100%
+        ratio=ratio==100.0?100:ratio;
+        function timeFormat(t) {
+            return Math.floor(t / 60) + ":" + (t % 60 / 100).toFixed(2).slice(-2);
+        }
+        Myself.playerTime.innerHTML ="-&nbsp;" +timeFormat(surplusTime)+ "&nbsp;/&nbsp;" + timeFormat(duration)+ "&nbsp;&nbsp;&nbsp;&nbsp;" +ratio+"%";
+        document.getElementById("playerProgressBar").style.width=ratio+"%";
+        if(ratio==100){//播放结束就播放就调用下一首
+            next();
+        }
     }
 
     //播放上一首
@@ -181,6 +195,8 @@ function Player() {
         Myself.nowPlay = Myself.nowPlay - 1;
         //取出mp3地址
         Myself.audio.src = Myself.playList[Myself.nowPlay].mp3;
+        //先清除计时避免越点计时越快
+        window.clearInterval(timer);
         play();
     }
 
@@ -194,6 +210,8 @@ function Player() {
         Myself.nowPlay = Myself.nowPlay + 1;
         //取出mp3地址
         Myself.audio.src = Myself.playList[Myself.nowPlay].mp3;
+        //先清除计时避免越点计时越快
+        window.clearInterval(timer);
         play();
     }
 
