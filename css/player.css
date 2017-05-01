@@ -1,14 +1,16 @@
-@font-face {/*自定义字体-用于绘制字体图标*/
+@font-face {
+    /*自定义字体-用于绘制字体图标*/
     font-family: 'icomoon';
-    src:  url('fonts/icomoon.eot?lawp0h');
-    src:  url('fonts/icomoon.eot?lawp0h#iefix') format('embedded-opentype'),
+    src: url('fonts/icomoon.eot?lawp0h');
+    src: url('fonts/icomoon.eot?lawp0h#iefix') format('embedded-opentype'),
     url('fonts/icomoon.ttf?lawp0h') format('truetype'),
     url('fonts/icomoon.woff?lawp0h') format('woff'),
     url('fonts/icomoon.svg?lawp0h#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
 }
-[class^="icon-"], [class*=" icon-"] {/*统一设置字体图标*/
+
+[class^="icon-"], [class*=" icon-"] { /*统一设置字体图标*/
     /* 使用 !important 是要防止与浏览器扩展的问题，改变字体 */
     font-family: 'icomoon' !important;
     speak: none;
@@ -21,20 +23,23 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-#player{
+
+#player {
     width: 100%;
     height: 100%;
     background: #272822;
 }
-#playerControl{
+
+#playerControl {
     position: absolute;
     height: 32px;
     width: 20%;
     top: 30%;
-    margin:0 0.5%;
-    align-items:center;
+    margin: 0 0.5%;
+    align-items: center;
 }
-#playerControl i{
+
+#playerControl i {
     margin: 0 5px;
     font-size: 32px;
     cursor: pointer;
@@ -44,21 +49,29 @@
     -ms-user-select: none;
     user-select: none;
 }
-#playerControl i:hover{
+#playerTime{
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+#playerControl i:hover {
     color: #FFFFFF;
 }
-#playerShow{
+
+#playerShow {
     position: absolute;
     font-size: 14px;
     font-family: arial, "Microsoft YaHei";
-    left: 20%;
+    left: 30%;
     height: 50px;
-    width:80%;
+    width: 70%;
     top: 20%;
-    margin:0 0.5%;
+    margin: 0 0  0 0.5%;
     cursor: default;
 }
-#playerShow #progress{
+
+#playerShow #progress {
     position: absolute;
     bottom: 15px;
     border-radius: 4px;
@@ -67,11 +80,39 @@
     height: 10px;
     background: #5a5a5a;
 }
-#playerShow #progress #playerProgressBar{
+
+#playerShow #progress #playerProgressBar {
     position: absolute;
     left: 0;
     bottom: 0;
     border-radius: 4px;
     height: 100%;
+    background: #258fb8;
+}
+
+#playerControl #volumeBox {
+    padding-top: 5px;
+    display: inline-block;
+    width: 35px;
+}
+
+#volumeBox #volumeBar {
+    position: absolute;
+    margin: -20px 0 0 40px;
+    border-radius: 4px;
+    width: 100px;
+    height: 5px;
+    background: #5a5a5a;
+    cursor: pointer;
+}
+#volumeBox:hover #volumeBar{
+    background: #FFFFFF;
+}
+#volumeBox #volumeBar #volumeSize{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    border-radius: 4px;
     background: #258fb8;
 }

@@ -13,8 +13,10 @@
         #showBox {
             width: 560px;
             height: auto;
-            position: relative;
-            top: 200px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 150px;
             margin: 0 auto;
         }
     </style>
@@ -41,14 +43,21 @@
 <script>
     var play = new Player();
     play.config({
-        autoPlay: true,//自动播放
+        autoPlay: false,//自动播放
         canvasId: "show",//canvas标签id
-        button:{//设置生成的控制按钮,不设置button默认全部创建
-            prev:true,//上一首
-            play:true,//播放,暂停
-            next:true,//下一首
-            volume:true,//音量
-            progressControl:true,//是否开启进度控制
+        button: {//设置生成的控制按钮,不设置button默认全部创建
+            prev: true,//上一首
+            play: true,//播放,暂停
+            next: true,//下一首
+            volume: true,//音量
+            progressControl: true,//是否开启进度控制
+        },
+        event: function (e) {//这是一个事件方法,点击控制按钮会传到此方法,点击想要扩展可以写在这个事件方法里
+            //参数:e.eventType 事件类型
+            //参数:e.describe 事件描述
+            if(e.eventType=="prev"||e.eventType=="next"){
+                changBg();
+            }
         },
         playList: [//播放列表,mp3地址不可跨域,需要在服务器模式下
             {
@@ -66,6 +75,14 @@
             {
                 title: "4",
                 mp3: "music/4.mp3",
+            },
+            {
+                title: "5",
+                mp3: "music/5.mp3",
+            },
+            {
+                title: "6",
+                mp3: "music/6.mp3",
             }
         ]
     });

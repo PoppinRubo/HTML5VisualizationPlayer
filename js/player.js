@@ -20,12 +20,14 @@ function Player() {
         volume: true,//音量
         progressControl: true//进度控制
     }
+    Myself.analyser = null;
     //频谱配置,外部调用就开始进行处理
     this.config = function (Object) {
         Myself.playList = Object.playList;
         Myself.canvasId = Object.canvasId;
         Myself.autoPlay = Object.autoPlay;
         Myself.button = Object.button;
+        Myself.event = Object.event;
         //记录是否处理过音频,保证createMediaElementSource只创建一次,多次创建会出现错误
         Myself.handle = 0;
         createParts();
@@ -99,6 +101,10 @@ function Player() {
             }
         }
         if (button.volume) {
+            //按钮与音量控制条容器
+            var volumeBox = document.createElement('div');
+            volumeBox.id = "volumeBox";
+            control.appendChild(volumeBox);
             //音量,按钮创建
             var volumeBtn = document.createElement('i');
             volumeBtn.className = "icon-volume";
@@ -106,7 +112,19 @@ function Player() {
             volumeBtn.title = "音量";
             playBtn.setAttribute('data', 'normal');
             volumeBtn.innerHTML = "&#xeab3";
-            control.appendChild(volumeBtn);
+            volumeBox.appendChild(volumeBtn);
+            //音量控制条
+            var volumeBar = document.createElement('div');
+            volumeBar.id = "volumeBar";
+            volumeBox.appendChild(volumeBar);
+
+            var volumeSize = document.createElement('div');
+            volumeSize.id = "volumeSize";
+            volumeBar.appendChild(volumeSize);
+
+            volumeBar.onclick = function (event) {
+                volumeChange(event, volumeBar, volumeSize);
+            }
             //音量,点击控制,静音-恢复
             var volumeBtn = document.getElementById("playVolume");
             volumeBtn.onclick = function () {
@@ -124,7 +142,7 @@ function Player() {
             var progress = document.getElementById("progress");
             progress.style.cursor = "pointer";
             progress.onclick = function (event) {
-                progressControl(event,progress);
+                progressControl(event, progress);
             }
         }
 
@@ -138,6 +156,8 @@ function Player() {
         //记录当前播放在数组里的位置
         Myself.nowPlay = 0;
 
+        //获取存储音量
+        Myself.audio.volume = volumeGetCookie();
         //设置自动播放,开始播放
         if (Myself.autoPlay) {
             play();
@@ -174,6 +194,8 @@ function Player() {
             window.clearInterval(timer);
             Myself.audio.pause();
         }
+        //事件传出
+        Myself.event({eventType: "play", describe: "播放/暂停"});
     }
 
     //显示时长,进度
@@ -210,6 +232,12 @@ function Player() {
         Myself.audio.src = Myself.playList[Myself.nowPlay].mp3;
         //先清除计时避免越点计时越快
         window.clearInterval(timer);
+        //重绘,变换效果
+        if (Myself.analyser != null) {
+            drawSpectrum(Myself.analyser);
+        }
+        //事件传出
+        Myself.event({eventType: "prev", describe: "播放上一首"});
         play();
     }
 
@@ -225,6 +253,12 @@ function Player() {
         Myself.audio.src = Myself.playList[Myself.nowPlay].mp3;
         //先清除计时避免越点计时越快
         window.clearInterval(timer);
+        //重绘,变换效果
+        if (Myself.analyser != null) {
+            drawSpectrum(Myself.analyser);
+        }
+        //事件传出
+        Myself.event({eventType: "next", describe: "播放上一首"});
         play();
     }
 
@@ -250,19 +284,54 @@ function Player() {
         }
     }
 
-    //进度点击控制
-    function progressControl(e,progress) {
+    //音量控制条点击设置音量大小
+    function volumeChange(e, volumeBar, volumeSize) {
         //点击的位置
-        var offsetX= e.offsetX;
-        //获取进度条总长度
-        var width=progress.offsetWidth;
+        var offsetX = e.offsetX;
+        //获取音量条总高度
+        var width = volumeBar.offsetWidth;
         //算出占比
-        var proportion=offsetX/width;
+        var proportion = offsetX / width;
+        volumeSize.style.width = (proportion * 100) + "%";
+        var size = proportion;
+        //音量设置
+        Myself.audio.volume = size;
+        //音量cookie存储
+        volumeSetCookie(size);
+    }
+
+    //音量cookie设置
+    function volumeSetCookie(size) {
+        document.cookie = "playerVolume=" + size;
+    }
+
+    //音量cookie获取
+    function volumeGetCookie() {
+        var volumeSize = document.getElementById("volumeSize");
+        var arr, reg = new RegExp("(^| )playerVolume=([^;]*)(;|$)");
+        var volume = 1;
+        if (arr = document.cookie.match(reg)) {
+            volume = unescape(arr[2]);
+        } else {
+            volume=0.5;
+        }
+        volumeSize.style.width = volume * 100 + "%";
+        return volume;
+    }
+
+    //进度点击控制
+    function progressControl(e, progress) {
+        //点击的位置
+        var offsetX = e.offsetX;
+        //获取进度条总长度
+        var width = progress.offsetWidth;
+        //算出占比
+        var proportion = offsetX / width;
         //把宽的比例换为播放比例,再计算audio播放位置
-        var duration=Myself.audio.duration;
-        var playTime=duration*proportion;
+        var duration = Myself.audio.duration;
+        var playTime = duration * proportion;
         //从此处播放
-        Myself.audio.currentTime=playTime;
+        Myself.audio.currentTime = playTime;
 
     }
 
@@ -277,13 +346,15 @@ function Player() {
         analyser.connect(audioContext.destination);
         //接下来把分析器传出去创建频谱
         drawSpectrum(analyser);
+        //记录一下,还会用到analyser
+        Myself.analyser = analyser;
         Myself.handle = 1;
     }
 
     //画出频谱
     function drawSpectrum(analyser) {
         //颜色数组
-        var colorArray = ['#f82466', '#00FFFF', '#AFFF7C', '#FFAA6A', '#6AD5FF', '#D26AFF', '#FF6AE6', '#FF6AB8', '#FF6A6A'];
+        var colorArray = ['#f82466', '#00FFFF', '#AFFF7C', '#FFAA6A', '#6AD5FF', '#D26AFF', '#FF6AE6', '#FF6AB8', '#FF6A6A', "#7091FF"];
         //颜色随机数
         var colorRandom = Math.floor(Math.random() * colorArray.length);
         //效果随机数
