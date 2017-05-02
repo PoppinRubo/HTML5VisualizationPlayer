@@ -53,6 +53,7 @@
 }
 
 #playerTime {
+    margin: 1% 0 0 0;
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
@@ -151,4 +152,36 @@
     height: 100%;
     border-radius: 4px;
     background: #258fb8;
+}
+#playerState{
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+    line-height: 25px;
+    text-align: center;
+    background: #272822;
+    border-radius: 4px;
+}
+#songInfo i{
+    position: relative;
+    height: 25px;
+    width: 25px;
+    top: 2px;
+    font-size: 18px;
+    margin: 0 5px 0 0;
+    animation:musicIcon 2.5s infinite;
+    -webkit-animation:musicIcon 2.5s infinite; /*Safari and Chrome*/
+}
+
+@keyframes musicIcon
+{
+    from {font-size: 12px;}
+    to {font-size: 18px;}
+}
+
+@-webkit-keyframes musicIcon /*Safari and Chrome*/
+{
+    from {font-size: 12px;}
+    to {font-size: 18px;}
 }

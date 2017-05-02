@@ -1,15 +1,17 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:0.8.6.20170502_Alpha
+ * 版本号:0.9.0.20170502_beta
  * Author：PoppinRubo
  * License: MIT
  */
 
 //创建一个对象方法
 function Player() {
-    //时间计时器
+    //播放获取进度信息时间计时器
     var timer;
+    //加载超时计时
+    var overtime;
     //先把自己用变量储存起来,后面要用
     var Myself = this;
     //默认设置
@@ -42,7 +44,7 @@ function Player() {
         try {
             Myself.audioContext = new AudioContext();
         } catch (e) {
-            console.log(e + ',您的浏览器不支持 AudioContext');
+            console.log('您的浏览器不支持 AudioContext,信息:' + e);
         }
     }
 
@@ -206,7 +208,10 @@ function Player() {
         if (Myself.audio.paused) {
             Myself.audio.play();
             timer = setInterval(function () {
+                //显示时长
                 showTime();
+                //获取就绪状态并处理相应
+                playerState();
             }, 1000);
             //播放媒体信息更新
             updates();
@@ -230,12 +235,42 @@ function Player() {
         songTitle.innerHTML = List[nowPlay].title;
         songTitle.title = "歌曲:" + List[nowPlay].title;
         var songAlbum = document.getElementById("album");
-        songAlbum.innerHTML = "("+List[nowPlay].album+")";
+        songAlbum.innerHTML = "(" + List[nowPlay].album + ")";
         songAlbum.title = "所属专辑:" + List[nowPlay].title;
         var songArtist = document.getElementById("artist");
         songArtist.innerHTML = List[nowPlay].artist;
         songArtist.title = "艺术家:" + List[nowPlay].artist;
     }
+
+    //音频播放状态,做消息处理
+    function playerState() {
+        //音频当前的就绪状态, 0 未连接 1 打开连接 2 发送请求 3 交互 4 完成交互,接手响应
+        var state = Myself.audio.readyState;
+        console.log(state);
+        var playerState = document.getElementById("playerState");
+        var songInfo = document.getElementById("songInfo");
+        if (state == 4) {
+            if (playerState != null) {
+                songInfo.removeChild(playerState);
+                //清除超时计时
+                window.clearTimeout(overtime);
+            }
+        } else {
+            if (playerState == null) {
+                playerState = document.createElement("div");
+                playerState.id = "playerState";
+                playerState.innerHTML = "<i class='icon-music'>&#xe95f;</i>加载中……";
+                songInfo.appendChild(playerState);
+                //加载超时处理
+                overtime = setTimeout(function () {//1分钟后超时处理
+                    if (Myself.audio.readyState == 0) {
+                        playerState.innerHTML = "加载失败!"
+                    }
+                }, 60000)
+            }
+        }
+    }
+
 
     //显示时长,进度
     function showTime() {
