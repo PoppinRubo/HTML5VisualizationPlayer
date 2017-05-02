@@ -10,10 +10,10 @@ HTML5可视化播放器是一款能将播放音乐画出频谱的播放器
 
 <br>
 1、引入播放器player.css与player.js
-
+``` html
     <link type="text/css" rel="stylesheet" href="css/player.css">
     <script src="js/player.js" type="text/javascript"></script>
-
+```
 2、加入下面HTML标签,用于创建播放器
 
     <div id="player">
@@ -35,7 +35,7 @@ player外面可以用一个div包起来控制它的大小
 ```
 
 4、调用生成播放器
-```javascript
+``` javascript
 <script>
     var play = new Player();
     play.config({
