@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:0.8.5.20170501_Alpha
+ * 版本号:0.8.6.20170502_Alpha
  * Author：PoppinRubo
  * License: MIT
  */
@@ -422,7 +422,7 @@ function Player() {
             gap = 2, //频谱条间距
             capHeight = 2,
             capStyle = '#FFFFFF',
-            meterNum = 800 / (10 + 2), //频谱条数量
+            meterNum = 1000 / (10 + 2), //频谱条数量
             capYPositionArray = []; //将上一画面各帽头的位置保存到这个数组
         ctx = canvas.getContext('2d'),
             gradient = ctx.createLinearGradient(0, 0, 0, 300);

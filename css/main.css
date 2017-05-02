@@ -37,3 +37,12 @@ footer {
     right: 0;
     bottom: 0;
 }
+#showBox {
+    width: 1000px;
+    height: auto;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 100px;
+    margin: 0 auto;
+}
