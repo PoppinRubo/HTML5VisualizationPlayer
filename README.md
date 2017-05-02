@@ -15,7 +15,9 @@ HTML5可视化播放器是一款能将播放音乐画出频谱的播放器
     <script src="js/player.js" type="text/javascript"></script>
 ```
 2、加入下面HTML标签,用于创建播放器
+
 ``` html
+
     <div id="player">
         <div id="songInfo"></div>
         <div id="playerControl"></div>
@@ -26,18 +28,19 @@ HTML5可视化播放器是一款能将播放音乐画出频谱的播放器
             </div>
         </div>
     </div>
+    
 ```
 player外面可以用一个div包起来控制它的大小
 
 3、创建canvas作为频谱容器
 ``` html
+
 <canvas id="show" width="560" height="350"></canvas>
 
 ```
 
 4、调用生成播放器
 ``` javascript
-<script>
     var play = new Player();
     play.config({
         autoPlay: false,//自动播放
@@ -76,7 +79,6 @@ player外面可以用一个div包起来控制它的大小
             }
         ]
     });
-</script>
 ```
 * 注意事项
 
