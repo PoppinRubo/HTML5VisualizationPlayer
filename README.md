@@ -2,8 +2,10 @@
 HTML5可视化播放器
 <br>
 ![](https://poppinrubo.github.io/HTML5VisualizationPlayer/images/demo.gif)  
-![](https://poppinrubo.github.io/HTML5VisualizationPlayer/images/demo2.gif)  
+
 ![](https://poppinrubo.github.io/HTML5VisualizationPlayer/images/demo3.png)  
+
+![](https://poppinrubo.github.io/HTML5VisualizationPlayer/images/demo2.gif)  
 HTML5可视化播放器是一款能将播放音乐画出频谱的播放器
 <br>
 
