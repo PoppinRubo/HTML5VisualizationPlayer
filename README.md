@@ -29,8 +29,10 @@ HTML5可视化播放器是一款能将播放音乐画出频谱的播放器
 player外面可以用一个div包起来控制它的大小
 
 3、创建canvas作为频谱容器
-
+``` html
 <canvas id="show" width="560" height="350"></canvas>
+
+```
 
 4、调用生成播放器
 ```javascript
