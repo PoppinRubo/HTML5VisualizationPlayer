@@ -17,8 +17,7 @@ HTML5可视化播放器是一款能将播放音乐画出频谱的播放器,基�
 ``` html
 
     <link type="text/css" rel="stylesheet" href="css/player.css">
-    <script src="js/player.js" type="text/javascript"></script>
-    
+    <script src="js/player.js" type="text/javascript"></script>    
 ```
 2、加入下面HTML标签,用于创建播放器
 
@@ -41,7 +40,6 @@ player外面可以用一个div包起来控制它的大小
 ``` html
 
 <canvas id="show" width="560" height="350"></canvas>
-
 ```
 
 4、调用生成播放器
@@ -63,7 +61,8 @@ player外面可以用一个div包起来控制它的大小
             //参数:e.eventType 事件类型
             //参数:e.describe 事件描述
             if(e.eventType=="prev"||e.eventType=="next"){
-                //如果点击了下一首或上一首就执行你的某个方法}
+                //如果点击了下一首或上一首就执行你的某个方法,更多事件待开发
+            }
         },
         playList: [//播放列表,mp3地址不可跨域,需要在服务器模式下
             {
