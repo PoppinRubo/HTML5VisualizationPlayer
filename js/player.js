@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:0.9.6.20170502_beta
+ * 版本号:0.9.8.20170502_beta
  * Author：PoppinRubo
  * License: MIT
  */
@@ -80,7 +80,7 @@ function Player() {
             playBtn.id = "playControl";
             playBtn.title = "播放";
             playBtn.innerHTML = "&#xeaa8";
-            playBtn.setAttribute('data', 'play');
+            playBtn.setAttribute('data', 'pause');
             control.appendChild(playBtn);
             //播放,暂停,控制
             var playControl = document.getElementById("playControl");
@@ -193,20 +193,15 @@ function Player() {
         if (Myself.button.play) {//判断是否设置播放按钮
             var playBtn = document.getElementById("playControl");
             var data = playBtn.getAttribute("data");
-            //字符图标变化
-            if (data == "play") {
-                playBtn.setAttribute("data", "pause");
-                playBtn.title = "播放";
-                playBtn.innerHTML = "&#xeaa8";
-            } else {
-                playBtn.setAttribute("data", "play");
-                playBtn.title = "暂停";
-                playBtn.innerHTML = "&#xeaa9"
-            }
         }
         //播放控制
         if (Myself.audio.paused) {
             Myself.audio.play();
+            //字符图标变化
+            playBtn.setAttribute("data", "play");
+            playBtn.title = "暂停";
+            playBtn.innerHTML = "&#xeaa9";
+
             timer = setInterval(function () {
                 //显示时长
                 showTime();
@@ -220,8 +215,13 @@ function Player() {
                 playHandle();
             }
         } else {
-            window.clearInterval(timer);
             Myself.audio.pause();
+            //字符图标变化
+            playBtn.setAttribute("data", "pause");
+            playBtn.title = "播放";
+            playBtn.innerHTML = "&#xeaa8";
+
+            window.clearInterval(timer);
         }
         //事件传出
         Myself.event({eventType: "play", describe: "播放/暂停"});
@@ -269,7 +269,6 @@ function Player() {
             }
         }
     }
-
 
     //显示时长,进度
     function showTime() {
