@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:0.9.0.20170502_beta
+ * 版本号:0.9.5.20170502_beta
  * Author：PoppinRubo
  * License: MIT
  */
@@ -246,7 +246,6 @@ function Player() {
     function playerState() {
         //音频当前的就绪状态, 0 未连接 1 打开连接 2 发送请求 3 交互 4 完成交互,接手响应
         var state = Myself.audio.readyState;
-        console.log(state);
         var playerState = document.getElementById("playerState");
         var songInfo = document.getElementById("songInfo");
         if (state == 4) {
@@ -262,11 +261,11 @@ function Player() {
                 playerState.innerHTML = "<i class='icon-music'>&#xe95f;</i>加载中……";
                 songInfo.appendChild(playerState);
                 //加载超时处理
-                overtime = setTimeout(function () {//1分钟后超时处理
+                overtime = setTimeout(function () {//2分钟后超时处理
                     if (Myself.audio.readyState == 0) {
                         playerState.innerHTML = "加载失败!"
                     }
-                }, 60000)
+                }, 120000)
             }
         }
     }
@@ -274,24 +273,31 @@ function Player() {
 
     //显示时长,进度
     function showTime() {
-        //时长总量
-        var duration = Myself.audio.duration;
-        //时长进度
-        var currentTime = Myself.audio.currentTime;
-        //剩余量
-        var surplusTime = duration - currentTime;
-        var ratio = ((currentTime / duration) * 100).toFixed(1);
-        //将100.00%变为100%
-        ratio = ratio == 100.0 ? 100 : ratio;
-        function timeFormat(t) {
-            return Math.floor(t / 60) + ":" + (t % 60 / 100).toFixed(2).slice(-2);
+        if (Myself.audio.readyState == 4) {
+            //时长总量
+            var duration = Myself.audio.duration;
+            //时长进度
+            var currentTime = Myself.audio.currentTime;
+            //剩余量
+            var surplusTime = duration - currentTime;
+            var ratio = ((currentTime / duration) * 100).toFixed(1);
+            //将100.00%变为100%
+            ratio = ratio == 100.0 ? 100 : ratio;
+            function timeFormat(t) {
+                return Math.floor(t / 60) + ":" + (t % 60 / 100).toFixed(2).slice(-2);
+            }
+
+            Myself.playerTime.innerHTML = "-&nbsp;" + timeFormat(surplusTime) + "&nbsp;/&nbsp;" + timeFormat(duration) + "&nbsp;&nbsp;&nbsp;&nbsp;" + ratio + "%";
+            document.getElementById("playerProgressBar").style.width = ratio + "%";
+            if (ratio == 100) {//播放结束就播放就调用下一首
+                next();
+            }
+
+        } else {//状态不为4说明未就绪显示00:00
+            Myself.playerTime.innerHTML = "-&nbsp;00:00&nbsp;/&nbsp;00:00&nbsp;&nbsp;&nbsp;&nbsp;0%";
         }
 
-        Myself.playerTime.innerHTML = "-&nbsp;" + timeFormat(surplusTime) + "&nbsp;/&nbsp;" + timeFormat(duration) + "&nbsp;&nbsp;&nbsp;&nbsp;" + ratio + "%";
-        document.getElementById("playerProgressBar").style.width = ratio + "%";
-        if (ratio == 100) {//播放结束就播放就调用下一首
-            next();
-        }
+
     }
 
     //播放上一首
