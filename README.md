@@ -12,9 +12,12 @@ HTML5可视化播放器是一款能将播放音乐画出频谱的播放器,基�
 
 <br>
 1、引入播放器player.css与player.js
+
 ``` html
+
     <link type="text/css" rel="stylesheet" href="css/player.css">
     <script src="js/player.js" type="text/javascript"></script>
+    
 ```
 2、加入下面HTML标签,用于创建播放器
 
@@ -42,7 +45,9 @@ player外面可以用一个div包起来控制它的大小
 ```
 
 4、调用生成播放器
+
 ``` javascript
+
     var play = new Player();
     play.config({
         autoPlay: false,//自动播放
@@ -81,7 +86,9 @@ player外面可以用一个div包起来控制它的大小
             }
         ]
     });
+    
 ```
+
 * 注意事项
 
 mp3的地址需要在同一个域下面(不在一个域获取不到文件数据),并且要在服务器环境下(不在服务器获取不到文件)
