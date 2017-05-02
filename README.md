@@ -60,27 +60,27 @@ player外面可以用一个div包起来控制它的大小
         event: function (e) {//这是一个事件方法,点击控制按钮会传到此方法,点击想要扩展可以写在这个事件方法里
             //参数:e.eventType 事件类型
             //参数:e.describe 事件描述
-            if(e.eventType=="prev"||e.eventType=="next"){
-                //如果点击了下一首或上一首就执行你的某个方法,更多事件待开发
-            }
+            if (e.eventType == "prev" || e.eventType == "next") {
+                //如果点击了下一首或上一首就执行你的某个方法,更多事件待开发
+            }
         },
         playList: [//播放列表,mp3地址不可跨域,需要在服务器模式下
             {
-                title: "歌曲标题",//音乐标题
-                album:"所属专辑",//所属专辑
-                artist:"艺术家",//艺术家
+                title: "歌曲1",//音乐标题
+                album: "所属专辑",//所属专辑
+                artist: "艺术家",//艺术家
                 mp3: "music/1.mp3",//音乐路径
             },
             {
-                title: "歌曲标题",
-                album:"所属专辑",//所属专辑
-                artist:"艺术家",//艺术家
+                title: "歌曲2",
+                album: "所属专辑",
+                artist: "艺术家",
                 mp3: "music/2.mp3",
             },
             {
-                title: "歌曲标题",
-                album:"所属专辑",//所属专辑
-                artist:"艺术家",//艺术家
+                title: "歌曲3",
+                album: "所属专辑",
+                artist: "艺术家",
                 mp3: "music/3.mp3",
             }
         ]
