@@ -7,7 +7,8 @@ HTML5可视化播放器
 
 HTML5可视化播放器是一款能将播放音乐画出频谱的播放器,基于[AudioSpectrumVisualizer](https://github.com/Poppinrubo/AudioSpectrumVisualizer "音频可视化插件")  
 <br>
-[查看DEMO](http://www.hiphopbl.com/radio/ "街舞部落,街舞音乐电台")  
+
+* [查看DEMO](http://www.hiphopbl.com/radio/ "街舞部落,街舞音乐电台")  
 
 `使用方法`
 
