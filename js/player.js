@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:0.9.8.20170502_beta
+ * 版本号:1.0
  * Author：PoppinRubo
  * License: MIT
  */
@@ -437,7 +437,7 @@ function Player() {
         //颜色随机数
         var colorRandom = Math.floor(Math.random() * colorArray.length);
         //效果随机数
-        var effectRandom = Math.floor(Math.random() * 1);
+        var effectRandom = Math.floor(Math.random() * 2);
         //随机选取颜色
         Myself.color = colorArray[colorRandom];
         //随机选取效果
@@ -445,6 +445,10 @@ function Player() {
             case 0:
                 //条形
                 bar(analyser);
+                break;
+            case 1:
+                //环形声波
+                circular(analyser);
                 break;
             default:
                 //条形
@@ -494,5 +498,31 @@ function Player() {
         }
         requestAnimationFrame(drawMeter);
     }
+
+    //环形声波
+    function circular(analyser) {
+        var canvas = document.getElementById(Myself.canvasId),
+            width = canvas.width,
+            height = canvas.height,
+            ctx = canvas.getContext('2d');
+        var draw = function () {
+            var array = new Uint8Array(128);//长度为128无符号数组用于保存getByteFrequencyData返回的频域数据
+            analyser.getByteFrequencyData(array);//以下是根据频率数据画图
+            ctx.clearRect(0, 0, 800, 800);
+            for (var i = 0; i < (array.length); i++) {
+                var value = array[i];
+                ctx.beginPath();
+                ctx.arc(width / 2, height / 2, value, 0, 400, false);
+                ctx.lineWidth = 2;//线圈粗细
+                ctx.strokeStyle = (1, Myself.color);
+                ctx.stroke();//画空心圆
+                ctx.closePath();
+
+            }
+            requestAnimationFrame(draw);
+        };
+        requestAnimationFrame(draw);
+    }
+
 
 }
