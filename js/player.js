@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:1.0.1
+ * 版本号:1.1.0
  * Author：PoppinRubo
  * License: MIT
  */
@@ -28,8 +28,9 @@ function Player() {
         Myself.playList = Object.playList;
         Myself.canvasId = Object.canvasId;
         Myself.autoPlay = Object.autoPlay;
-        Myself.button = Object.button;
         Myself.event = Object.event;
+        Myself.button = Object.button == null ? Myself.button : Object.button;
+        Myself.effect = Object.effect == null ? -1 : Object.effect;//默认随机,效果为-1表示随机切换效果
         //记录是否处理过音频,保证createMediaElementSource只创建一次,多次创建会出现错误
         Myself.handle = 0;
         createParts();
@@ -381,7 +382,9 @@ function Player() {
 
     //音量cookie设置
     function volumeSetCookie(size) {
-        document.cookie = "playerVolume=" + size;
+        var d = new Date();
+        d.setHours(d.getHours() + (24 * 30)); //保存一个月
+        document.cookie = "playerVolume=" + size + ";expires=" + d.toGMTString();
     }
 
     //音量cookie获取
@@ -430,7 +433,7 @@ function Player() {
         Myself.handle = 1;
     }
 
-    //画出频谱
+    //频谱效果处理
     function drawSpectrum(analyser) {
         //颜色数组
         var colorArray = ['#f82466', '#00FFFF', '#AFFF7C', '#FFAA6A', '#6AD5FF', '#D26AFF', '#FF6AE6', '#FF6AB8', '#FF6A6A', "#7091FF"];
@@ -440,6 +443,9 @@ function Player() {
         Myself.color = colorArray[colorRandom];
         //效果随机数
         var effectRandom = Math.floor(Math.random() * 2);
+        if (Myself.effect != -1) {
+            effectRandom = Myself.effect;
+        }
         //随机选取效果
         switch (effectRandom) {
             case 0:
@@ -455,6 +461,30 @@ function Player() {
                 bar(analyser);
         }
 
+    }
+
+    //16进制颜色转为RGB格式,传入16进制颜色代码与透明度
+    function colorRgb(color, opacity) {
+        var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;//十六进制颜色值的正则表达式
+        opacity = opacity < 0 ? 0 : opacity;//颜色范围控制
+        opacity = opacity > 1 ? 1 : opacity;
+        if (color && reg.test(color)) {
+            if (color.length === 4) {
+                var sColorNew = "#";
+                for (var i = 1; i < 4; i += 1) {
+                    sColorNew += color.slice(i, i + 1).concat(color.slice(i, i + 1));
+                }
+                color = sColorNew;
+            }
+            //处理六位的颜色值
+            var sColorChange = [];
+            for (var i = 1; i < 7; i += 2) {
+                sColorChange.push(parseInt("0x" + color.slice(i, i + 2)));
+            }
+            return "rgba(" + sColorChange.join(",") + "," + opacity + ")";
+        } else {
+            return color;
+        }
     }
 
     //条状效果
@@ -477,6 +507,8 @@ function Player() {
             ctx.clearRect(0, 0, cwidth, cheight);
             for (var i = 0; i < meterNum; i++) {
                 var value = array[i * step]; //获取当前能量值
+                //把能量用事件传出
+                Myself.event({eventType: "energy", describe: value});
                 if (capYPositionArray.length < Math.round(meterNum)) {
                     capYPositionArray.push(value); //初始化保存帽头位置的数组，将第一个画面的数据压入其中
                 }
@@ -512,12 +544,13 @@ function Player() {
             for (var i = 0; i < (array.length); i++) {
                 var value = array[i];
                 ctx.beginPath();
-                ctx.arc(width / 2, height / 2, value, 0, 400, false);
+                ctx.arc(width / 2, height / 2, value * 0.8, 0, 400, false);
                 ctx.lineWidth = 2;//线圈粗细
-                ctx.strokeStyle = (1, Myself.color);
+                ctx.strokeStyle = (1, colorRgb(Myself.color, value / 700));//颜色透明度随值变化
                 ctx.stroke();//画空心圆
                 ctx.closePath();
-
+                //把能量用事件传出
+                Myself.event({eventType: "energy", describe: value});
             }
             requestAnimationFrame(draw);
         };
