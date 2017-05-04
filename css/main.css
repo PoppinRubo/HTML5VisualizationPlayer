@@ -6,8 +6,15 @@ html, body {
 }
 
 body {
+    background-size: 100% 100%;
+    background-position: center center;
     background-repeat: no-repeat;
     background-image: url("images/bg_1.jpg");
+    -webkit-transition: all .3s ease-out;
+    -moz-transition: all .3s ease-out;
+    -ms-transition: all .3s ease-out;
+    -o-transition: all .3s ease-out;
+    transition: all .3s ease-out;
 }
 
 #fileWrapper {
@@ -37,6 +44,7 @@ footer {
     right: 0;
     bottom: 0;
 }
+
 #showBox {
     width: 1000px;
     height: auto;

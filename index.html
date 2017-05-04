@@ -34,7 +34,7 @@
     play.config({
         autoPlay: false,//自动播放
         canvasId: "show",//canvas标签id
-        effect: 0,//频谱效果,不设置或-1为随机变化,0为条形柱状,1为环状声波
+        effect: -1,//频谱效果,不设置或-1为随机变化,0为条形柱状,1为环状声波
         button: {//设置生成的控制按钮,不设置button默认全部创建
             prev: true,//上一首
             play: true,//播放,暂停
@@ -51,7 +51,7 @@
                 changBg();
             }
             if (e.eventType == "energy") {
-                console.log(e.describe);
+                //changBgSize(e.describe);
             }
         },
         playList: [//播放列表,mp3地址不可跨域,需要在服务器模式下
@@ -109,6 +109,15 @@
         ];
         document.body.style.background = "url(" + bgArray[Math.floor(Math.random() * bgArray.length)] + ")";
         document.body.style.backgroundSize = "100% 100%";
+    }
+    function changBgSize(data) {
+        console.log(data);
+        if (data > 150) {
+            document.body.style.backgroundSize = "105% 105%";
+        } else {
+            document.body.style.backgroundSize = "100% 100%";
+        }
+
     }
     changBg();
 </script>

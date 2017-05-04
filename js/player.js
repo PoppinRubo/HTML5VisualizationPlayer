@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:1.1.0
+ * 版本号:1.1.1
  * Author：PoppinRubo
  * License: MIT
  */
@@ -23,12 +23,16 @@ function Player() {
         progressControl: true//进度控制
     }
     Myself.analyser = null;
+    //定义事件默认空方法
+    Myself.event = function (e) {
+        //未设置事件方法就默认执行空方法
+    }
     //频谱配置,外部调用就开始进行处理
     this.config = function (Object) {
         Myself.playList = Object.playList;
         Myself.canvasId = Object.canvasId;
         Myself.autoPlay = Object.autoPlay;
-        Myself.event = Object.event;
+        Myself.event = Object.event == null ? Myself.event : Object.event;
         Myself.button = Object.button == null ? Myself.button : Object.button;
         Myself.effect = Object.effect == null ? -1 : Object.effect;//默认随机,效果为-1表示随机切换效果
         //记录是否处理过音频,保证createMediaElementSource只创建一次,多次创建会出现错误
