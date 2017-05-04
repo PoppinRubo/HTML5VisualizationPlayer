@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:1.0
+ * 版本号:1.0.1
  * Author：PoppinRubo
  * License: MIT
  */
@@ -436,10 +436,10 @@ function Player() {
         var colorArray = ['#f82466', '#00FFFF', '#AFFF7C', '#FFAA6A', '#6AD5FF', '#D26AFF', '#FF6AE6', '#FF6AB8', '#FF6A6A', "#7091FF"];
         //颜色随机数
         var colorRandom = Math.floor(Math.random() * colorArray.length);
-        //效果随机数
-        var effectRandom = Math.floor(Math.random() * 2);
         //随机选取颜色
         Myself.color = colorArray[colorRandom];
+        //效果随机数
+        var effectRandom = Math.floor(Math.random() * 2);
         //随机选取效果
         switch (effectRandom) {
             case 0:
@@ -508,7 +508,7 @@ function Player() {
         var draw = function () {
             var array = new Uint8Array(128);//长度为128无符号数组用于保存getByteFrequencyData返回的频域数据
             analyser.getByteFrequencyData(array);//以下是根据频率数据画图
-            ctx.clearRect(0, 0, 800, 800);
+            ctx.clearRect(0, 0, width, height);//清除画布
             for (var i = 0; i < (array.length); i++) {
                 var value = array[i];
                 ctx.beginPath();
