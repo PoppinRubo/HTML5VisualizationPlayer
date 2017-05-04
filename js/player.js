@@ -550,7 +550,7 @@ function Player() {
                 ctx.beginPath();
                 ctx.arc(width / 2, height / 2, value * 0.8, 0, 400, false);
                 ctx.lineWidth = 2;//线圈粗细
-                ctx.strokeStyle = (1, colorRgb(Myself.color, value / 700));//颜色透明度随值变化
+                ctx.strokeStyle = (1, colorRgb(Myself.color, value / 1000));//颜色透明度随值变化
                 ctx.stroke();//画空心圆
                 ctx.closePath();
                 //把能量用事件传出
