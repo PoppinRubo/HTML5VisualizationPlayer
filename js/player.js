@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:1.1.1
+ * 版本号:1.1.2
  * Author：PoppinRubo
  * License: MIT
  */
@@ -241,7 +241,7 @@ function Player() {
         songTitle.title = "歌曲:" + List[nowPlay].title;
         var songAlbum = document.getElementById("album");
         songAlbum.innerHTML = "(" + List[nowPlay].album + ")";
-        songAlbum.title = "所属专辑:" + List[nowPlay].title;
+        songAlbum.title = "所属专辑:" + List[nowPlay].album;
         var songArtist = document.getElementById("artist");
         songArtist.innerHTML = List[nowPlay].artist;
         songArtist.title = "艺术家:" + List[nowPlay].artist;
