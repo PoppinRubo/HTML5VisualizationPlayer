@@ -15,12 +15,12 @@ function Player() {
     //先把自己用变量储存起来,后面要用
     var Myself = this;
     //默认设置
-    Myself.button = {//设置生成的控制按钮,默认开启
-        prev: true,//上一首
-        play: true,//播放,暂停
-        next: true,//下一首
-        volume: true,//音量
-        progressControl: true//进度控制
+    Myself.button = { //设置生成的控制按钮,默认开启
+        prev: true, //上一首
+        play: true, //播放,暂停
+        next: true, //下一首
+        volume: true, //音量
+        progressControl: true //进度控制
     }
     Myself.analyser = null;
     //定义事件默认空方法
@@ -34,7 +34,7 @@ function Player() {
         Myself.autoPlay = Object.autoPlay;
         Myself.event = Object.event == null ? Myself.event : Object.event;
         Myself.button = Object.button == null ? Myself.button : Object.button;
-        Myself.effect = Object.effect == null ? -1 : Object.effect;//默认随机,效果为-1表示随机切换效果
+        Myself.effect = Object.effect == null ? -1 : Object.effect; //默认随机,效果为-1表示随机切换效果
         //记录是否处理过音频,保证createMediaElementSource只创建一次,多次创建会出现错误
         Myself.handle = 0;
         createParts();
@@ -70,7 +70,7 @@ function Player() {
             prevBtn.className = "icon-previous";
             prevBtn.id = "playPrev";
             prevBtn.title = "上一首";
-            prevBtn.innerHTML = "&#xeaaf";
+            prevBtn.innerHTML = "&#xf048;";
             control.appendChild(prevBtn);
             //上一首,控制
             var playPrev = document.getElementById("playPrev");
@@ -84,7 +84,7 @@ function Player() {
             playBtn.className = "icon-play";
             playBtn.id = "playControl";
             playBtn.title = "播放";
-            playBtn.innerHTML = "&#xeaa8";
+            playBtn.innerHTML = "&#xf5f8;";
             playBtn.setAttribute('data', 'pause');
             control.appendChild(playBtn);
             //播放,暂停,控制
@@ -99,7 +99,7 @@ function Player() {
             nextBtn.className = "icon-next";
             nextBtn.id = "playNext";
             nextBtn.title = "下一首";
-            nextBtn.innerHTML = "&#xeab0";
+            nextBtn.innerHTML = "&#xf051;";
             control.appendChild(nextBtn);
             //下一首,控制
             var playNext = document.getElementById("playNext");
@@ -118,7 +118,7 @@ function Player() {
             volumeBtn.id = "playVolume";
             volumeBtn.title = "音量";
             playBtn.setAttribute('data', 'normal');
-            volumeBtn.innerHTML = "&#xeab3";
+            volumeBtn.innerHTML = "&#xecd5;";
             volumeBox.appendChild(volumeBtn);
             //音量控制条
             var volumeBar = document.createElement('div');
@@ -195,7 +195,7 @@ function Player() {
 
     //播放,暂停 控制
     function play() {
-        if (Myself.button.play) {//判断是否设置播放按钮
+        if (Myself.button.play) { //判断是否设置播放按钮
             var playBtn = document.getElementById("playControl");
             var data = playBtn.getAttribute("data");
         }
@@ -205,7 +205,7 @@ function Player() {
             //字符图标变化
             playBtn.setAttribute("data", "play");
             playBtn.title = "暂停";
-            playBtn.innerHTML = "&#xeaa9";
+            playBtn.innerHTML = "&#xeccb;";
 
             timer = setInterval(function () {
                 //显示时长
@@ -224,12 +224,15 @@ function Player() {
             //字符图标变化
             playBtn.setAttribute("data", "pause");
             playBtn.title = "播放";
-            playBtn.innerHTML = "&#xeaa8";
+            playBtn.innerHTML = "&#xf5f8;";
 
             window.clearInterval(timer);
         }
         //事件传出
-        Myself.event({eventType: "play", describe: "播放/暂停"});
+        Myself.event({
+            eventType: "play",
+            describe: "播放/暂停"
+        });
     }
 
     //播放媒体信息更新
@@ -263,10 +266,10 @@ function Player() {
             if (playerState == null) {
                 playerState = document.createElement("div");
                 playerState.id = "playerState";
-                playerState.innerHTML = "<i class='icon-music'>&#xe95f;</i>加载中……";
+                playerState.innerHTML = "<i class='icon-music'>&#xf001;</i>加载中……";
                 songInfo.appendChild(playerState);
                 //加载超时处理
-                overtime = setTimeout(function () {//2分钟后超时处理
+                overtime = setTimeout(function () { //2分钟后超时处理
                     if (Myself.audio.readyState == 0) {
                         playerState.innerHTML = "加载失败!"
                     }
@@ -287,17 +290,18 @@ function Player() {
             var ratio = ((currentTime / duration) * 100).toFixed(1);
             //将100.00%变为100%
             ratio = ratio == 100.0 ? 100 : ratio;
+
             function timeFormat(t) {
                 return Math.floor(t / 60) + ":" + (t % 60 / 100).toFixed(2).slice(-2);
             }
 
             Myself.playerTime.innerHTML = "-&nbsp;" + timeFormat(surplusTime) + "&nbsp;/&nbsp;" + timeFormat(duration) + "&nbsp;&nbsp;&nbsp;&nbsp;" + ratio + "%";
             document.getElementById("playerProgressBar").style.width = ratio + "%";
-            if (ratio == 100) {//播放结束就播放就调用下一首
+            if (ratio == 100) { //播放结束就播放就调用下一首
                 next();
             }
 
-        } else {//状态不为4说明未就绪显示00:00
+        } else { //状态不为4说明未就绪显示00:00
             Myself.playerTime.innerHTML = "-&nbsp;00:00&nbsp;/&nbsp;00:00&nbsp;&nbsp;&nbsp;&nbsp;0%";
         }
 
@@ -321,7 +325,10 @@ function Player() {
             drawSpectrum(Myself.analyser);
         }
         //事件传出
-        Myself.event({eventType: "prev", describe: "播放上一首"});
+        Myself.event({
+            eventType: "prev",
+            describe: "播放上一首"
+        });
         play();
     }
 
@@ -342,22 +349,25 @@ function Player() {
             drawSpectrum(Myself.analyser);
         }
         //事件传出
-        Myself.event({eventType: "next", describe: "播放上一首"});
+        Myself.event({
+            eventType: "next",
+            describe: "播放上一首"
+        });
         play();
     }
 
     //音量点击控制,静音-恢复
     function volume() {
-        if (Myself.button.volume) {//判断是否设置音量按钮
+        if (Myself.button.volume) { //判断是否设置音量按钮
             var volumeBtn = document.getElementById("playVolume");
             var data = volumeBtn.getAttribute("data");
             //字符图标变化
             if (data == "normal") {
                 volumeBtn.setAttribute("data", "mute");
-                volumeBtn.innerHTML = "&#xeab3";
+                volumeBtn.innerHTML = "&#xecd5;";
             } else {
                 volumeBtn.setAttribute("data", "normal");
-                volumeBtn.innerHTML = "&#xeab6"
+                volumeBtn.innerHTML = "&#xecd8;"
             }
         }
         //点击音量控制
@@ -469,8 +479,8 @@ function Player() {
 
     //16进制颜色转为RGB格式,传入16进制颜色代码与透明度
     function colorRgb(color, opacity) {
-        var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;//十六进制颜色值的正则表达式
-        opacity = opacity < 0 ? 0 : opacity;//颜色范围控制
+        var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/; //十六进制颜色值的正则表达式
+        opacity = opacity < 0 ? 0 : opacity; //颜色范围控制
         opacity = opacity > 1 ? 1 : opacity;
         if (color && reg.test(color)) {
             if (color.length === 4) {
@@ -512,11 +522,13 @@ function Player() {
             for (var i = 0; i < meterNum; i++) {
                 var value = array[i * step]; //获取当前能量值
                 //把能量用事件传出
-                Myself.event({eventType: "energy", describe: value});
+                Myself.event({
+                    eventType: "energy",
+                    describe: value
+                });
                 if (capYPositionArray.length < Math.round(meterNum)) {
                     capYPositionArray.push(value); //初始化保存帽头位置的数组，将第一个画面的数据压入其中
-                }
-                ;
+                };
                 ctx.fillStyle = capStyle;
                 //开始绘制帽头
                 if (value < capYPositionArray[i]) { //如果当前值小于之前值
@@ -524,8 +536,7 @@ function Player() {
                 } else {
                     ctx.fillRect(i * 12, cheight - value, meterWidth, capHeight); //否则使用当前值直接绘制
                     capYPositionArray[i] = value;
-                }
-                ;
+                };
                 //开始绘制频谱条
                 ctx.fillStyle = gradient;
                 ctx.fillRect(i * 12, cheight - value + capHeight, meterWidth, cheight);
@@ -542,19 +553,22 @@ function Player() {
             height = canvas.height,
             ctx = canvas.getContext('2d');
         var draw = function () {
-            var array = new Uint8Array(128);//长度为128无符号数组用于保存getByteFrequencyData返回的频域数据
-            analyser.getByteFrequencyData(array);//以下是根据频率数据画图
-            ctx.clearRect(0, 0, width, height);//清除画布
+            var array = new Uint8Array(128); //长度为128无符号数组用于保存getByteFrequencyData返回的频域数据
+            analyser.getByteFrequencyData(array); //以下是根据频率数据画图
+            ctx.clearRect(0, 0, width, height); //清除画布
             for (var i = 0; i < (array.length); i++) {
                 var value = array[i];
                 ctx.beginPath();
                 ctx.arc(width / 2, height / 2, value * 0.8, 0, 400, false);
-                ctx.lineWidth = 2;//线圈粗细
-                ctx.strokeStyle = (1, colorRgb(Myself.color, value / 1000));//颜色透明度随值变化
-                ctx.stroke();//画空心圆
+                ctx.lineWidth = 2; //线圈粗细
+                ctx.strokeStyle = (1, colorRgb(Myself.color, value / 1000)); //颜色透明度随值变化
+                ctx.stroke(); //画空心圆
                 ctx.closePath();
                 //把能量用事件传出
-                Myself.event({eventType: "energy", describe: value});
+                Myself.event({
+                    eventType: "energy",
+                    describe: value
+                });
             }
             requestAnimationFrame(draw);
         };
