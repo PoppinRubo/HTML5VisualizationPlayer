@@ -70,7 +70,7 @@ function Player() {
             prevBtn.className = "icon-previous";
             prevBtn.id = "playPrev";
             prevBtn.title = "上一首";
-            prevBtn.innerHTML = "&#xf048;";
+            prevBtn.innerHTML = "&#xea23;";
             control.appendChild(prevBtn);
             //上一首,控制
             var playPrev = document.getElementById("playPrev");
@@ -84,7 +84,7 @@ function Player() {
             playBtn.className = "icon-play";
             playBtn.id = "playControl";
             playBtn.title = "播放";
-            playBtn.innerHTML = "&#xf5f8;";
+            playBtn.innerHTML = "&#xea1c;";
             playBtn.setAttribute('data', 'pause');
             control.appendChild(playBtn);
             //播放,暂停,控制
@@ -99,7 +99,7 @@ function Player() {
             nextBtn.className = "icon-next";
             nextBtn.id = "playNext";
             nextBtn.title = "下一首";
-            nextBtn.innerHTML = "&#xf051;";
+            nextBtn.innerHTML = "&#xea24;";
             control.appendChild(nextBtn);
             //下一首,控制
             var playNext = document.getElementById("playNext");
@@ -118,7 +118,7 @@ function Player() {
             volumeBtn.id = "playVolume";
             volumeBtn.title = "音量";
             playBtn.setAttribute('data', 'normal');
-            volumeBtn.innerHTML = "&#xecd5;";
+            volumeBtn.innerHTML = "&#xea27;";
             volumeBox.appendChild(volumeBtn);
             //音量控制条
             var volumeBar = document.createElement('div');
@@ -205,7 +205,7 @@ function Player() {
             //字符图标变化
             playBtn.setAttribute("data", "play");
             playBtn.title = "暂停";
-            playBtn.innerHTML = "&#xeccb;";
+            playBtn.innerHTML = "&#xea1d;";
 
             timer = setInterval(function () {
                 //显示时长
@@ -224,7 +224,7 @@ function Player() {
             //字符图标变化
             playBtn.setAttribute("data", "pause");
             playBtn.title = "播放";
-            playBtn.innerHTML = "&#xf5f8;";
+            playBtn.innerHTML = "&#xea1c;";
 
             window.clearInterval(timer);
         }
@@ -266,7 +266,7 @@ function Player() {
             if (playerState == null) {
                 playerState = document.createElement("div");
                 playerState.id = "playerState";
-                playerState.innerHTML = "<i class='icon-music'>&#xf001;</i>加载中……";
+                playerState.innerHTML = "<i class='icon-music'>&#xe911;</i>加载中……";
                 songInfo.appendChild(playerState);
                 //加载超时处理
                 overtime = setTimeout(function () { //2分钟后超时处理
@@ -364,10 +364,10 @@ function Player() {
             //字符图标变化
             if (data == "normal") {
                 volumeBtn.setAttribute("data", "mute");
-                volumeBtn.innerHTML = "&#xecd5;";
+                volumeBtn.innerHTML = "&#xea27;";
             } else {
                 volumeBtn.setAttribute("data", "normal");
-                volumeBtn.innerHTML = "&#xecd8;"
+                volumeBtn.innerHTML = "&#xea2a;"
             }
         }
         //点击音量控制
