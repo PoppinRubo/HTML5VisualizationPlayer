@@ -57,13 +57,10 @@ function Player() {
     function createParts() {
         //创建audio
         var audio = document.createElement("AUDIO");
-        var source = document.createElement("SOURCE");
         audio.crossOrigin = 'anonymous';
-        audio.appendChild(source);
         var player = document.getElementById("player");
         player.appendChild(audio);
         Myself.audio = audio;
-        Myself.source = source;
         //创建控制按钮
         var control = document.getElementById("playerControl");
         var button = Myself.button;
@@ -164,7 +161,7 @@ function Player() {
         //加载地址方法,audio加入一个初始地址
         var playList = Myself.playList;
         //把列表第一个mp3地址设置到audio上
-        Myself.source.src = playList[0].mp3;
+        Myself.audio.src = playList[0].mp3;
 
         //歌曲信息,创建
         var songInfo = document.getElementById('songInfo');
@@ -321,7 +318,7 @@ function Player() {
         //记录当前播放在数组里的位置位置移动,减小
         Myself.nowPlay = Myself.nowPlay - 1;
         //媒体url信息更新
-        Myself.source.src = Myself.playList[Myself.nowPlay].mp3;
+        Myself.audio.src = Myself.playList[Myself.nowPlay].mp3;
         //先清除计时避免越点计时越快
         window.clearInterval(timer);
         //重绘,变换效果
@@ -345,7 +342,7 @@ function Player() {
         //记录当前播放在数组里的位置位置移动,增加
         Myself.nowPlay = Myself.nowPlay + 1;
         //媒体url信息更新
-        Myself.source.src = Myself.playList[Myself.nowPlay].mp3;
+        Myself.audio.src = Myself.playList[Myself.nowPlay].mp3;
         //先清除计时避免越点计时越快
         window.clearInterval(timer);
         //重绘,变换效果
