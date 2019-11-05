@@ -118,7 +118,9 @@ function Player() {
             volumeBtn.className = "icon-volume";
             volumeBtn.id = "playVolume";
             volumeBtn.title = "音量";
-            playBtn.setAttribute('data', 'normal');
+            if (playBtn) {
+                playBtn.setAttribute('data', 'normal');
+            }
             volumeBtn.innerHTML = "&#xea27;";
             volumeBox.appendChild(volumeBtn);
             //音量控制条
@@ -195,19 +197,17 @@ function Player() {
     }
 
     //播放,暂停 控制
-    function play() {
-        if (Myself.button.play) { //判断是否设置播放按钮
-            var playBtn = document.getElementById("playControl");
-            var data = playBtn.getAttribute("data");
-        }
+    function play(autoPlay = false) {
+        var playBtn = document.getElementById("playControl");
         //播放控制
         if (Myself.audio.paused) {
             Myself.audio.play();
             //字符图标变化
-            playBtn.setAttribute("data", "play");
-            playBtn.title = "暂停";
-            playBtn.innerHTML = "&#xea1d;";
-
+            if (playBtn) {
+                playBtn.setAttribute("data", "play");
+                playBtn.title = "暂停";
+                playBtn.innerHTML = "&#xea1d;";
+            }
             timer = setInterval(function () {
                 //显示时长
                 showTime();
@@ -223,10 +223,11 @@ function Player() {
         } else {
             Myself.audio.pause();
             //字符图标变化
-            playBtn.setAttribute("data", "pause");
-            playBtn.title = "播放";
-            playBtn.innerHTML = "&#xea1c;";
-
+            if (playBtn) {
+                playBtn.setAttribute("data", "pause");
+                playBtn.title = "播放";
+                playBtn.innerHTML = "&#xea1c;";
+            }
             window.clearInterval(timer);
         }
         //事件传出
