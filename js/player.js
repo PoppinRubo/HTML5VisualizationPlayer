@@ -7,7 +7,7 @@
  */
 
 //创建一个对象方法
-function Player(config) {
+function Player() {
     //播放获取进度信息时间计时器
     var timer;
     //加载超时计时
