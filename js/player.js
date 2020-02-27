@@ -214,7 +214,9 @@ function Player() {
         songInfo.appendChild(album);
 
         var span = document.createElement('span');
+        span.innerHTML = '-';
         songInfo.appendChild(span);
+        myself.division = span;
 
         var artist = document.createElement('div');
         artist.id = "artist";
@@ -286,7 +288,8 @@ function Player() {
         songAlbum.title = "所属专辑:" + albumTitle;
         var songArtist = document.getElementById("artist");
         var artistName = list[nowPlay].artist;
-        songArtist.innerHTML = artistName ? '-' + artistName : '';
+        myself.division.style.display = artistName ? 'block' : 'none';
+        songArtist.innerHTML = artistName;
         songArtist.title = "艺术家:" + artistName;
     }
 
