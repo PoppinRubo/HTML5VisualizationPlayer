@@ -26,34 +26,18 @@ HTML5可视化播放器是一款能将播放音乐画出频谱的播放器,基�
 
 ``` html
 
-    <div id="player">
-        <div id="songInfo"></div>
-        <div id="playerControl"></div>
-        <div id="playerShow">
-            <div id="playerTime"></div>
-            <div id="progress">
-                <div id="playerProgressBar"></div>
-            </div>
-        </div>
-    </div>    
+    <player></player>   
 ```
 player外面可以用一个div包起来控制它的大小
 
-3、创建canvas作为频谱容器
-``` html
-
-<canvas id="show" width="560" height="350"></canvas>
-```
-
-4、调用生成播放器
+3、调用生成播放器
 
 ``` javascript
 
     var play = new Player();
     play.config({
-        autoPlay: false,//自动播放
-        canvasId: "show",//canvas标签id
-        effect: 0,//频谱效果,不设置或-1为随机变化,0为条形柱状,1为环状声波
+        autoPlay: false,//自动播放,2018年1月谷歌浏览器不支持自动播放只能设置为false
+        effect: 0,//频谱效果,不设置或0为随机变化,1为条形柱状,2为环状声波
         button: {//设置生成的控制按钮,不设置button默认全部创建
             prev: true,//上一首
             play: true,//播放,暂停
@@ -61,42 +45,37 @@ player外面可以用一个div包起来控制它的大小
             volume: true,//音量
             progressControl: true,//是否开启进度控制
         },
-        event: function (e) {//这是一个事件方法,点击控制按钮会传到此方法,点击想要扩展可以写在这个事件方法里
+        event: function (e) {
+            //这是一个事件方法,点击控制按钮会传到此方法,点击想要扩展可以写在这个事件方法里
             //参数:e.eventType 事件类型
             //参数:e.describe 事件详情,或参数
-            //类型为 prev:上一首,next：下一首,play:播放/暂停,energy:此时播放的能量值,时刻变化,值在e.describe里
+            //类型为 prev:上一首,next：下一首,play:播放/暂停
             if (e.eventType == "prev" || e.eventType == "next") {
-                //如果点击了下一首或上一首就执行你的某个方法,更多事件待开发
-                changBg();
-            }
-            if (e.eventType == "energy") {
-                console.log(e.describe);
+                //如果点击了下一首或上一首就执行事件事件
             }
         },
-        playList: [//播放列表,mp3地址不可跨域,需要在服务器模式下
+        energy: function (value) {
+            //此时播放的能量值,时刻变化
+            //console.log(value);
+        },
+        playList: [//播放列表
             {
-                title: "歌曲1",//音乐标题
-                album: "所属专辑",//所属专辑
-                artist: "艺术家",//艺术家
-                mp3: "music/1.mp3",//音乐路径
+                title: "Kandy",//音乐标题
+                album: "",//所属专辑
+                artist: "",//艺术家
+                mp3: "music/Kandy.mp3",//音乐路径
             },
             {
-                title: "歌曲2",
-                album: "所属专辑",
-                artist: "艺术家",
-                mp3: "music/2.mp3",
+                title: "Paper Gangsta",//音乐标题
+                album: "",//所属专辑
+                artist: "",//艺术家
+                mp3: "music/PaperGangsta.mp3",//音乐路径
             },
-            {
-                title: "歌曲3",
-                album: "所属专辑",
-                artist: "艺术家",
-                mp3: "music/3.mp3",
-            }
         ]
     });
     
 ```
 
 * 注意事项
-
-mp3 资源如果存在跨域情况需要对资源进行跨域访问CORS设置，否则获取不到声源
+1、需要在服务器环境下
+2、mp3 资源如果存在跨域情况需要对资源进行跨域访问CORS设置，否则获取不到声源

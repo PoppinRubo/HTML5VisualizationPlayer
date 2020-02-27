@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
     height: 100%;
     margin: 0;
     font-family: arial, "Microsoft YaHei";
@@ -9,7 +10,7 @@ body {
     background-size: 100% 100%;
     background-position: center center;
     background-repeat: no-repeat;
-    background-image: url("images/bg_1.jpg");
+    background-image: url("../images/bg.jpg");
     -webkit-transition: all .3s ease-out;
     -moz-transition: all .3s ease-out;
     -ms-transition: all .3s ease-out;
@@ -35,7 +36,7 @@ footer {
     color: #aaa;
 }
 
-.playBox {
+.play-box {
     position: fixed;
     width: 1000px;
     height: 100px;
@@ -43,14 +44,4 @@ footer {
     left: 0;
     right: 0;
     bottom: 0;
-}
-
-#showBox {
-    width: 1000px;
-    height: auto;
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 100px;
-    margin: 0 auto;
 }

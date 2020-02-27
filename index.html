@@ -1,127 +1,62 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="description" content="HTML5VisualizationPlayer">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HTML5 可视化音乐播放器</title>
-    <link type="text/css" rel="stylesheet" href="css/main.css">
-    <link type="text/css" rel="stylesheet" href="css/player.css">
-    <script src="js/player.js" type="text/javascript"></script>
-</head>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="HTML5VisualizationPlayer">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>HTML5 可视化音乐播放器</title>
+        <link type="text/css" rel="stylesheet" href="css/main.css">
+        <link type="text/css" rel="stylesheet" href="css/player.css">
+        <script src="js/player.js" type="text/javascript"></script>
+    </head>
 
-<body>
-    <div id="showBox">
-        <canvas id="show" width="1000" height="450"></canvas>
-    </div>
-
-    <div class="playBox">
-        <div id="player">
-            <div id="songInfo"></div>
-            <div id="playerControl"></div>
-            <div id="playerShow">
-                <div id="playerTime"></div>
-                <div id="progress">
-                    <div id="playerProgressBar"></div>
-                </div>
-            </div>
+    <body>
+        <div class="play-box">
+            <player></player>
         </div>
-    </div>
-    <div id="biu" style="position: fixed;left: 0;bottom: 0"></div>
-</body>
-<script>
-    var play = new Player();
-    play.config({
-        autoPlay: true,//自动播放
-        canvasId: "show",//canvas标签id
-        effect: -1,//频谱效果,不设置或-1为随机变化,0为条形柱状,1为环状声波
-        button: {//设置生成的控制按钮,不设置button默认全部创建
-            prev: true,//上一首
-            play: true,//播放,暂停
-            next: true,//下一首
-            volume: true,//音量
-            progressControl: true,//是否开启进度控制
-        },
-        event: function (e) {//这是一个事件方法,点击控制按钮会传到此方法,点击想要扩展可以写在这个事件方法里
-            //参数:e.eventType 事件类型
-            //参数:e.describe 事件详情,或参数
-            //类型为 prev:上一首,next：下一首,play:播放/暂停,energy:此时播放的能量值,时刻变化,值在e.describe里
-            if (e.eventType == "prev" || e.eventType == "next") {
-                //如果点击了下一首或上一首就执行你的某个方法,更多事件待开发
-                changBg();
-            }
-            if (e.eventType == "energy") {
-                //changBgSize(e.describe);
-            }
-        },
-        playList: [//播放列表,mp3地址不可跨域,需要在服务器模式下
-            {
-                title: "1",//音乐标题
-                album: "所属专辑",//所属专辑
-                artist: "艺术家",//艺术家
-                mp3: "music/1.mp3",//音乐路径
+    </body>
+    <script>
+        var play = new Player();
+        play.config({
+            autoPlay: false,//自动播放,2018年1月谷歌浏览器不支持自动播放只能设置为false
+            effect: 0,//频谱效果,不设置或0为随机变化,1为条形柱状,2为环状声波
+            button: {//设置生成的控制按钮,不设置button默认全部创建
+                prev: true,//上一首
+                play: true,//播放,暂停
+                next: true,//下一首
+                volume: true,//音量
+                progressControl: true,//是否开启进度控制
             },
-            {
-                title: "2",
-                album: "所属专辑",//所属专辑
-                artist: "艺术家",//艺术家
-                mp3: "music/2.mp3",
+            event: function (e) {
+                //这是一个事件方法,点击控制按钮会传到此方法,点击想要扩展可以写在这个事件方法里
+                //参数:e.eventType 事件类型
+                //参数:e.describe 事件详情,或参数
+                //类型为 prev:上一首,next：下一首,play:播放/暂停
+                if (e.eventType == "prev" || e.eventType == "next") {
+                    //如果点击了下一首或上一首就执行事件事件
+                }
             },
-            {
-                title: "3",
-                album: "所属专辑",//所属专辑
-                artist: "艺术家",//艺术家
-                mp3: "music/3.mp3",
+            energy: function (value) {
+                //此时播放的能量值,时刻变化
+                //console.log(value);
             },
-            {
-                title: "4",
-                album: "所属专辑",//所属专辑
-                artist: "艺术家",//艺术家
-                mp3: "music/4.mp3",
-            },
-            {
-                title: "5",
-                album: "所属专辑",//所属专辑
-                artist: "艺术家",//艺术家
-                mp3: "music/5.mp3",
-            },
-            {
-                title: "6",
-                album: "所属专辑",//所属专辑
-                artist: "艺术家",//艺术家
-                mp3: "music/6.mp3",
-            },
-            {
-                title: "7",
-                album: "所属专辑",//所属专辑
-                artist: "艺术家",//艺术家
-                mp3: "music/7.mp3",
-            }
-        ]
-    });
-    //随机背景
-    function changBg() {
-        var bgArray = [
-            'images/bg_1.jpg',
-            'images/bg_2.jpg',
-            'images/bg_3.jpg',
-            'images/bg_4.jpg',
-        ];
-        document.body.style.background = "url(" + bgArray[Math.floor(Math.random() * bgArray.length)] + ")";
-        document.body.style.backgroundSize = "100% 100%";
-    }
-    function changBgSize(data) {
-        console.log(data);
-        if (data > 150) {
-            document.body.style.backgroundSize = "105% 105%";
-        } else {
-            document.body.style.backgroundSize = "100% 100%";
-        }
-
-    }
-    changBg();
-</script>
+            playList: [//播放列表
+                {
+                    title: "Kandy",//音乐标题
+                    album: "",//所属专辑
+                    artist: "",//艺术家
+                    mp3: "music/Kandy.mp3",//音乐路径
+                },
+                {
+                    title: "Paper Gangsta",//音乐标题
+                    album: "",//所属专辑
+                    artist: "",//艺术家
+                    mp3: "music/PaperGangsta.mp3",//音乐路径
+                },
+            ]
+        });
+    </script>
 
 </html>

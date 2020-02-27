@@ -1,42 +1,50 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:1.1.3
+ * 版本号:1.2.0
  * Author：PoppinRubo
  * License: MIT
  */
 
 //创建一个对象方法
-function Player() {
+function Player(config) {
     //播放获取进度信息时间计时器
     var timer;
     //加载超时计时
     var overtime;
     //先把自己用变量储存起来,后面要用
-    var Myself = this;
+    var myself = this;
     //默认设置
-    Myself.button = { //设置生成的控制按钮,默认开启
+    myself.button = { //设置生成的控制按钮,默认开启
         prev: true, //上一首
         play: true, //播放,暂停
         next: true, //下一首
         volume: true, //音量
         progressControl: true //进度控制
     }
-    Myself.analyser = null;
+
+    myself.analyser = null;
+
     //定义事件默认空方法
-    Myself.event = function (e) {
+    myself.event = function (e) {
         //未设置事件方法就默认执行空方法
     }
+    //能量传出方法默认空方法
+    myself.energy = function (v) {
+        //未设置能量传出就默认执行空方法
+    }
+
     //频谱配置,外部调用就开始进行处理
     this.config = function (Object) {
-        Myself.playList = Object.playList;
-        Myself.canvasId = Object.canvasId;
-        Myself.autoPlay = Object.autoPlay;
-        Myself.event = Object.event == null ? Myself.event : Object.event;
-        Myself.button = Object.button == null ? Myself.button : Object.button;
-        Myself.effect = Object.effect == null ? -1 : Object.effect; //默认随机,效果为-1表示随机切换效果
+        myself.playList = Object.playList;
+        myself.canvasId = Object.canvasId;
+        myself.autoPlay = Object.autoPlay;
+        myself.event = Object.event || myself.event;
+        myself.energy = Object.energy || myself.energy;
+        myself.button = Object.button || myself.button;
+        myself.effect = Object.effect || 0; //默认随机,效果为0表示随机切换效果
         //记录是否处理过音频,保证createMediaElementSource只创建一次,多次创建会出现错误
-        Myself.handle = 0;
+        myself.handle = 0;
         createParts();
     }
 
@@ -47,7 +55,7 @@ function Player() {
         window.requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
         window.cancelAnimationFrame = window.cancelAnimationFrame || window.webkitCancelAnimationFrame || window.mozCancelAnimationFrame || window.msCancelAnimationFrame;
         try {
-            Myself.audioContext = new AudioContext();
+            myself.audioContext = new AudioContext();
         } catch (e) {
             console.log('您的浏览器不支持 AudioContext,信息:' + e);
         }
@@ -58,12 +66,44 @@ function Player() {
         //创建audio
         var audio = document.createElement("AUDIO");
         audio.crossOrigin = 'anonymous';
-        var player = document.getElementById("player");
+        var player = document.getElementsByTagName("player")[0];
+        player.className = 'visualizer-player';
         player.appendChild(audio);
-        Myself.audio = audio;
+        myself.audio = audio;
+
+        //音乐部件
+        var songInfo = document.createElement("div");
+        var control = document.createElement("div");
+        var playerShow = document.createElement("div");
+        var playerTime = document.createElement("div");
+        var progress = document.createElement("div");
+        var playerProgressBar = document.createElement("div");
+        songInfo.className = 'song-info';
+        control.className = 'player-control';
+        playerShow.className = 'player-show';
+        playerTime.className = 'player-time';
+        progress.className = 'progress';
+        playerProgressBar.className = 'player-progress-bar';
+        player.appendChild(songInfo);
+        player.appendChild(control);
+        player.appendChild(playerShow);
+        playerShow.appendChild(playerTime);
+        playerShow.appendChild(progress);
+        progress.appendChild(playerProgressBar);
+
+        myself.songInfo = songInfo;
+        myself.progress = progress;
+        myself.playerProgressBar = playerProgressBar;
+
         //创建控制按钮
-        var control = document.getElementById("playerControl");
-        var button = Myself.button;
+        var button = myself.button;
+        //创建画布
+        var canvas = document.createElement("canvas");
+        canvas.height = 450;
+        canvas.width = player.clientWidth;
+        canvas.style.bottom = player.clientHeight + 'px';
+        player.appendChild(canvas);
+        myself.canvas = canvas;
 
         if (button.prev) {
             //上一首,按钮创建
@@ -144,13 +184,12 @@ function Player() {
         }
 
         //显示时间容器
-        var playerTime = document.getElementById("playerTime");
         playerTime.innerHTML = "-&nbsp;00:00&nbsp;/&nbsp;00:00&nbsp;&nbsp;&nbsp;&nbsp;0%";
-        Myself.playerTime = playerTime;
+        myself.playerTime = playerTime;
 
         //进度条
-        if (Myself.button.progressControl) {
-            var progress = document.getElementById("progress");
+        if (myself.button.progressControl) {
+            var progress = myself.progress;
             progress.style.cursor = "pointer";
             progress.onclick = function (event) {
                 progressControl(event, progress);
@@ -161,13 +200,11 @@ function Player() {
         windowAudioContext();
 
         //加载地址方法,audio加入一个初始地址
-        var playList = Myself.playList;
+        var playList = myself.playList;
         //把列表第一个mp3地址设置到audio上
-        Myself.audio.src = playList[0].mp3;
+        myself.audio.src = playList[0].mp3;
 
         //歌曲信息,创建
-        var songInfo = document.getElementById('songInfo');
-
         var songTitle = document.createElement('div');
         songTitle.id = "songTitle";
         songInfo.appendChild(songTitle);
@@ -177,7 +214,6 @@ function Player() {
         songInfo.appendChild(album);
 
         var span = document.createElement('span');
-        span.innerHTML = "-";
         songInfo.appendChild(span);
 
         var artist = document.createElement('div');
@@ -185,13 +221,13 @@ function Player() {
         songInfo.appendChild(artist);
 
         //记录当前播放在数组里的位置
-        Myself.nowPlay = 0;
+        myself.nowPlay = 0;
         //信息设置
         updates();
         //获取存储音量
-        Myself.audio.volume = volumeGetCookie();
+        myself.audio.volume = volumeGetCookie();
         //设置自动播放,开始播放
-        if (Myself.autoPlay) {
+        if (myself.autoPlay) {
             play();
         }
     }
@@ -200,8 +236,8 @@ function Player() {
     function play(autoPlay = false) {
         var playBtn = document.getElementById("playControl");
         //播放控制
-        if (Myself.audio.paused) {
-            Myself.audio.play();
+        if (myself.audio.paused) {
+            myself.audio.play();
             //字符图标变化
             if (playBtn) {
                 playBtn.setAttribute("data", "play");
@@ -217,11 +253,11 @@ function Player() {
             //播放媒体信息更新
             updates();
             //处理播放数据,处理过就不再处理
-            if (Myself.handle == 0) {
+            if (myself.handle == 0) {
                 playHandle();
             }
         } else {
-            Myself.audio.pause();
+            myself.audio.pause();
             //字符图标变化
             if (playBtn) {
                 playBtn.setAttribute("data", "pause");
@@ -231,7 +267,7 @@ function Player() {
             window.clearInterval(timer);
         }
         //事件传出
-        Myself.event({
+        myself.event({
             eventType: "play",
             describe: "播放/暂停"
         });
@@ -239,25 +275,27 @@ function Player() {
 
     //播放媒体信息更新
     function updates() {
-        var List = Myself.playList;
-        var nowPlay = Myself.nowPlay;
+        var list = myself.playList;
+        var nowPlay = myself.nowPlay;
         var songTitle = document.getElementById("songTitle");
-        songTitle.innerHTML = List[nowPlay].title;
-        songTitle.title = "歌曲:" + List[nowPlay].title;
+        songTitle.innerHTML = list[nowPlay].title;
+        songTitle.title = "歌曲:" + list[nowPlay].title;
         var songAlbum = document.getElementById("album");
-        songAlbum.innerHTML = "(" + List[nowPlay].album + ")";
-        songAlbum.title = "所属专辑:" + List[nowPlay].album;
+        var albumTitle = list[nowPlay].album;
+        songAlbum.innerHTML = albumTitle ? "(" + albumTitle + ")" : '';
+        songAlbum.title = "所属专辑:" + albumTitle;
         var songArtist = document.getElementById("artist");
-        songArtist.innerHTML = List[nowPlay].artist;
-        songArtist.title = "艺术家:" + List[nowPlay].artist;
+        var artistName = list[nowPlay].artist;
+        songArtist.innerHTML = artistName ? '-' + artistName : '';
+        songArtist.title = "艺术家:" + artistName;
     }
 
     //音频播放状态,做消息处理
     function playerState() {
         //音频当前的就绪状态, 0 未连接 1 打开连接 2 发送请求 3 交互 4 完成交互,接手响应
-        var state = Myself.audio.readyState;
-        var playerState = document.getElementById("playerState");
-        var songInfo = document.getElementById("songInfo");
+        var state = myself.audio.readyState;
+        var playerState = document.getElementById("player-state");
+        var songInfo = myself.songInfo;
         if (state == 4) {
             if (playerState != null) {
                 songInfo.removeChild(playerState);
@@ -267,12 +305,13 @@ function Player() {
         } else {
             if (playerState == null) {
                 playerState = document.createElement("div");
-                playerState.id = "playerState";
+                playerState.className = "player-state";
+                playerState.id = "player-state";
                 playerState.innerHTML = "<i class='icon-music'>&#xe911;</i>加载中……";
                 songInfo.appendChild(playerState);
                 //加载超时处理
                 overtime = setTimeout(function () { //2分钟后超时处理
-                    if (Myself.audio.readyState == 0) {
+                    if (myself.audio.readyState == 0) {
                         playerState.innerHTML = "加载失败!"
                     }
                 }, 120000)
@@ -282,11 +321,11 @@ function Player() {
 
     //显示时长,进度
     function showTime() {
-        if (Myself.audio.readyState == 4) {
+        if (myself.audio.readyState == 4) {
             //时长总量
-            var duration = Myself.audio.duration;
+            var duration = myself.audio.duration;
             //时长进度
-            var currentTime = Myself.audio.currentTime;
+            var currentTime = myself.audio.currentTime;
             //剩余量
             var surplusTime = duration - currentTime;
             var ratio = ((currentTime / duration) * 100).toFixed(1);
@@ -297,14 +336,14 @@ function Player() {
                 return Math.floor(t / 60) + ":" + (t % 60 / 100).toFixed(2).slice(-2);
             }
 
-            Myself.playerTime.innerHTML = "-&nbsp;" + timeFormat(surplusTime) + "&nbsp;/&nbsp;" + timeFormat(duration) + "&nbsp;&nbsp;&nbsp;&nbsp;" + ratio + "%";
-            document.getElementById("playerProgressBar").style.width = ratio + "%";
+            myself.playerTime.innerHTML = "-&nbsp;" + timeFormat(surplusTime) + "&nbsp;/&nbsp;" + timeFormat(duration) + "&nbsp;&nbsp;&nbsp;&nbsp;" + ratio + "%";
+            myself.playerProgressBar.style.width = ratio + "%";
             if (ratio == 100) { //播放结束就播放就调用下一首
                 next();
             }
 
         } else { //状态不为4说明未就绪显示00:00
-            Myself.playerTime.innerHTML = "-&nbsp;00:00&nbsp;/&nbsp;00:00&nbsp;&nbsp;&nbsp;&nbsp;0%";
+            myself.playerTime.innerHTML = "-&nbsp;00:00&nbsp;/&nbsp;00:00&nbsp;&nbsp;&nbsp;&nbsp;0%";
         }
 
 
@@ -313,21 +352,21 @@ function Player() {
     //播放上一首
     function prev() {
         //数组播放最前移动到最后
-        if (Myself.nowPlay == 0) {
-            Myself.nowPlay = Myself.playList.length;
+        if (myself.nowPlay == 0) {
+            myself.nowPlay = myself.playList.length;
         }
         //记录当前播放在数组里的位置位置移动,减小
-        Myself.nowPlay = Myself.nowPlay - 1;
+        myself.nowPlay = myself.nowPlay - 1;
         //媒体url信息更新
-        Myself.audio.src = Myself.playList[Myself.nowPlay].mp3;
+        myself.audio.src = myself.playList[myself.nowPlay].mp3;
         //先清除计时避免越点计时越快
         window.clearInterval(timer);
         //重绘,变换效果
-        if (Myself.analyser != null) {
-            drawSpectrum(Myself.analyser);
+        if (myself.analyser != null) {
+            drawSpectrum(myself.analyser);
         }
         //事件传出
-        Myself.event({
+        myself.event({
             eventType: "prev",
             describe: "播放上一首"
         });
@@ -337,21 +376,21 @@ function Player() {
     //播放下一首
     function next() {
         //数组播放最后移动到最前
-        if (Myself.nowPlay == Myself.playList.length - 1) {
-            Myself.nowPlay = -1;
+        if (myself.nowPlay == myself.playList.length - 1) {
+            myself.nowPlay = -1;
         }
         //记录当前播放在数组里的位置位置移动,增加
-        Myself.nowPlay = Myself.nowPlay + 1;
+        myself.nowPlay = myself.nowPlay + 1;
         //媒体url信息更新
-        Myself.audio.src = Myself.playList[Myself.nowPlay].mp3;
+        myself.audio.src = myself.playList[myself.nowPlay].mp3;
         //先清除计时避免越点计时越快
         window.clearInterval(timer);
         //重绘,变换效果
-        if (Myself.analyser != null) {
-            drawSpectrum(Myself.analyser);
+        if (myself.analyser != null) {
+            drawSpectrum(myself.analyser);
         }
         //事件传出
-        Myself.event({
+        myself.event({
             eventType: "next",
             describe: "播放上一首"
         });
@@ -360,7 +399,7 @@ function Player() {
 
     //音量点击控制,静音-恢复
     function volume() {
-        if (Myself.button.volume) { //判断是否设置音量按钮
+        if (myself.button.volume) { //判断是否设置音量按钮
             var volumeBtn = document.getElementById("playVolume");
             var data = volumeBtn.getAttribute("data");
             //字符图标变化
@@ -373,10 +412,10 @@ function Player() {
             }
         }
         //点击音量控制
-        if (Myself.audio.muted) {
-            Myself.audio.muted = false;
+        if (myself.audio.muted) {
+            myself.audio.muted = false;
         } else {
-            Myself.audio.muted = true;
+            myself.audio.muted = true;
         }
     }
 
@@ -391,7 +430,7 @@ function Player() {
         volumeSize.style.width = (proportion * 100) + "%";
         var size = proportion;
         //音量设置
-        Myself.audio.volume = size;
+        myself.audio.volume = size;
         //音量cookie存储
         volumeSetCookie(size);
     }
@@ -426,27 +465,27 @@ function Player() {
         //算出占比
         var proportion = offsetX / width;
         //把宽的比例换为播放比例,再计算audio播放位置
-        var duration = Myself.audio.duration;
+        var duration = myself.audio.duration;
         var playTime = duration * proportion;
         //从此处播放
-        Myself.audio.currentTime = playTime;
+        myself.audio.currentTime = playTime;
 
     }
 
     //播放处理,提取数据
     function playHandle() {
         windowAudioContext();
-        var audioContext = Myself.audioContext;
+        var audioContext = myself.audioContext;
         var analyser = audioContext.createAnalyser();
-        var playData = audioContext.createMediaElementSource(Myself.audio);
+        var playData = audioContext.createMediaElementSource(myself.audio);
         // 将播放数据与分析器连接
         playData.connect(analyser);
         analyser.connect(audioContext.destination);
         //接下来把分析器传出去创建频谱
         drawSpectrum(analyser);
         //记录一下,还会用到analyser
-        Myself.analyser = analyser;
-        Myself.handle = 1;
+        myself.analyser = analyser;
+        myself.handle = 1;
     }
 
     //频谱效果处理
@@ -456,19 +495,19 @@ function Player() {
         //颜色随机数
         var colorRandom = Math.floor(Math.random() * colorArray.length);
         //随机选取颜色
-        Myself.color = colorArray[colorRandom];
+        myself.color = colorArray[colorRandom];
+        //图形数组
+        var effectArray = [1, 2];
         //效果随机数
-        var effectRandom = Math.floor(Math.random() * 2);
-        if (Myself.effect != -1) {
-            effectRandom = Myself.effect;
-        }
+        var effectRandom = Math.floor(Math.random() * effectArray.length);
+        var effect = myself.effect || colorArray[effectRandom];
         //随机选取效果
-        switch (effectRandom) {
-            case 0:
+        switch (effect) {
+            case 1:
                 //条形
                 bar(analyser);
                 break;
-            case 1:
+            case 2:
                 //环形声波
                 circular(analyser);
                 break;
@@ -505,7 +544,7 @@ function Player() {
 
     //条状效果
     function bar(analyser) {
-        var canvas = document.getElementById(Myself.canvasId),
+        var canvas = myself.canvas,
             cwidth = canvas.width,
             cheight = canvas.height - 2,
             meterWidth = 10, //频谱条宽度
@@ -515,7 +554,7 @@ function Player() {
             ctx = canvas.getContext('2d'),
             capYPositionArray = [], //将上一画面各帽头的位置保存到这个数组
             gradient = ctx.createLinearGradient(0, 0, 0, 300);
-        gradient.addColorStop(1, Myself.color);
+        gradient.addColorStop(1, myself.color);
         var drawMeter = function () {
             var array = new Uint8Array(analyser.frequencyBinCount);
             analyser.getByteFrequencyData(array);
@@ -523,11 +562,8 @@ function Player() {
             ctx.clearRect(0, 0, cwidth, cheight);
             for (var i = 0; i < meterNum; i++) {
                 var value = array[i * step]; //获取当前能量值
-                //把能量用事件传出
-                Myself.event({
-                    eventType: "energy",
-                    describe: value
-                });
+                //把能量传出
+                myself.energy(value);
                 if (capYPositionArray.length < Math.round(meterNum)) {
                     capYPositionArray.push(value); //初始化保存帽头位置的数组，将第一个画面的数据压入其中
                 };
@@ -550,7 +586,7 @@ function Player() {
 
     //环形声波
     function circular(analyser) {
-        var canvas = document.getElementById(Myself.canvasId),
+        var canvas = myself.canvas,
             width = canvas.width,
             height = canvas.height,
             ctx = canvas.getContext('2d');
@@ -563,19 +599,14 @@ function Player() {
                 ctx.beginPath();
                 ctx.arc(width / 2, height / 2, value * 0.8, 0, 400, false);
                 ctx.lineWidth = 2; //线圈粗细
-                ctx.strokeStyle = (1, colorRgb(Myself.color, value / 1000)); //颜色透明度随值变化
+                ctx.strokeStyle = (1, colorRgb(myself.color, value / 1000)); //颜色透明度随值变化
                 ctx.stroke(); //画空心圆
                 ctx.closePath();
-                //把能量用事件传出
-                Myself.event({
-                    eventType: "energy",
-                    describe: value
-                });
+                //把能量传出
+                myself.energy(value);
             }
             requestAnimationFrame(draw);
         };
         requestAnimationFrame(draw);
     }
-
-
 }
