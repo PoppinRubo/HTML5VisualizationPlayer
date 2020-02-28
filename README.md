@@ -1,7 +1,7 @@
 # HTML5VisualizationPlayer
 HTML5可视化播放器
 <br>
-![](https://poppinrubo.github.io/HTML5VisualizationPlayer/images/demo.gif)  
+![](https://poppinrubo.github.io/HTML5VisualizationPlayer/images/1.gif)  
 
 ![](https://poppinrubo.github.io/HTML5VisualizationPlayer/images/demo3.png)  
 
