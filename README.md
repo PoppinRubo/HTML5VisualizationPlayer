@@ -35,7 +35,7 @@ player外面可以用一个div包起来控制它的大小
 ``` javascript
 
     var play = new Player();
-    play.config({
+    play.init({
         autoPlay: false,//自动播放,2018年1月谷歌浏览器不支持自动播放，设置true不能自动播放
         effect: 0,//频谱效果,不设置或0为随机变化,1为条形柱状,2为环状声波
         button: {//设置生成的控制按钮,不设置button默认全部创建
