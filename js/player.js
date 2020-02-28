@@ -504,7 +504,7 @@ function Player() {
         //随机选取颜色
         myself.color = colorArray[colorRandom];
         //图形数组
-        var effectArray = [1, 2];
+        var effectArray = [1, 2, 3];
         //效果随机数
         var effectRandom = Math.floor(Math.random() * effectArray.length);
         var effect = myself.effect || effectArray[effectRandom];
@@ -517,6 +517,10 @@ function Player() {
             case 2:
                 //环形声波
                 circular(analyser);
+                break;
+            case 3:
+                //心电图效果
+                line(analyser);
                 break;
             default:
                 //条形
@@ -612,6 +616,33 @@ function Player() {
                 //把能量传出
                 myself.energy(value);
             }
+            requestAnimationFrame(draw);
+        };
+        requestAnimationFrame(draw);
+    }
+
+    //心电图效果
+    function line(analyser) {
+        var canvas = myself.canvas,
+            width = canvas.width,
+            height = canvas.height,
+            ctx = canvas.getContext('2d');
+        ctx.strokeStyle = myself.color;
+        ctx.lineWidth = 2; //线粗细
+        var draw = function () {
+            var array = new Uint8Array(128); //长度为128无符号数组用于保存getByteFrequencyData返回的频域数据
+            analyser.getByteFrequencyData(array); //以下是根据频率数据画图
+            ctx.clearRect(0, 0, width, height); //清除画布
+            ctx.beginPath();
+            for (var i = 9; i < (array.length); i++) {
+                var value = array[i];
+                //绘制线根据能量值变化
+                ctx.lineTo(i * 7, value + 100);
+                //把能量传出
+                myself.energy(value);
+            };
+            ctx.stroke();
+            ctx.closePath();
             requestAnimationFrame(draw);
         };
         requestAnimationFrame(draw);
