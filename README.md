@@ -10,8 +10,6 @@ HTML5可视化播放器
 ![](https://poppinrubo.github.io/HTML5VisualizationPlayer/images/demo.png)
 
 HTML5可视化播放器是一款能将音乐播放绘制出频谱的播放器  
-<br>
-
 > [查看DEMO](https://www.hiphopbl.com/radio/ "街舞部落,街舞音乐电台")  
 
 <hr>
