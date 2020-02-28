@@ -34,8 +34,8 @@ function Player() {
         //未设置能量传出就默认执行空方法
     }
 
-    //频谱配置,外部调用就开始进行处理
-    this.config = function (Object) {
+    //频谱配置初始化,外部调用就开始进行处理
+    this.init = function (Object) {
         myself.playList = Object.playList || [{
             title: '播放列表为空',
             album: '',
