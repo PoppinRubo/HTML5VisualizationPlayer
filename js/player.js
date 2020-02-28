@@ -36,9 +36,13 @@ function Player() {
 
     //频谱配置,外部调用就开始进行处理
     this.config = function (Object) {
-        myself.playList = Object.playList;
-        myself.canvasId = Object.canvasId;
-        myself.autoPlay = Object.autoPlay;
+        myself.playList = Object.playList || [{
+            title: '播放列表为空',
+            album: '',
+            artist: '',
+            mp3: ''
+        }];
+        myself.autoPlay = Object.autoPlay || false;
         myself.event = Object.event || myself.event;
         myself.energy = Object.energy || myself.energy;
         myself.button = Object.button || myself.button;
