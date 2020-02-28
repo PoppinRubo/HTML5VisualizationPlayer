@@ -507,7 +507,7 @@ function Player() {
         var effectArray = [1, 2];
         //效果随机数
         var effectRandom = Math.floor(Math.random() * effectArray.length);
-        var effect = myself.effect || colorArray[effectRandom];
+        var effect = myself.effect || effectArray[effectRandom];
         //随机选取效果
         switch (effect) {
             case 1:
