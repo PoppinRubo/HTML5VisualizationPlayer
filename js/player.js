@@ -601,7 +601,7 @@ function Player() {
             width = canvas.width,
             height = canvas.height,
             ctx = canvas.getContext('2d');
-        var draw = function () {
+        var drawCircular = function () {
             var array = new Uint8Array(128); //长度为128无符号数组用于保存getByteFrequencyData返回的频域数据
             analyser.getByteFrequencyData(array); //以下是根据频率数据画图
             ctx.clearRect(0, 0, width, height); //清除画布
@@ -616,9 +616,9 @@ function Player() {
                 //把能量传出
                 myself.energy(value);
             }
-            requestAnimationFrame(draw);
+            requestAnimationFrame(drawCircular);
         };
-        requestAnimationFrame(draw);
+        requestAnimationFrame(drawCircular);
     }
 
     //心电图效果
@@ -627,12 +627,12 @@ function Player() {
             width = canvas.width,
             height = canvas.height,
             ctx = canvas.getContext('2d');
-        ctx.strokeStyle = myself.color;
-        ctx.lineWidth = 2; //线粗细
-        var draw = function () {
+        var drawLine = function () {
             var array = new Uint8Array(128); //长度为128无符号数组用于保存getByteFrequencyData返回的频域数据
             analyser.getByteFrequencyData(array); //以下是根据频率数据画图
             ctx.clearRect(0, 0, width, height); //清除画布
+            ctx.strokeStyle = myself.color;
+            ctx.lineWidth = 2; //线粗细
             ctx.beginPath();
             for (var i = 0; i < (array.length); i++) {
                 var value = array[i];
@@ -643,8 +643,8 @@ function Player() {
             };
             ctx.stroke();
             ctx.closePath();
-            requestAnimationFrame(draw);
+            requestAnimationFrame(drawLine);
         };
-        requestAnimationFrame(draw);
+        requestAnimationFrame(drawLine);
     }
 }
