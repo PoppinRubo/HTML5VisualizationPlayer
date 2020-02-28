@@ -573,8 +573,6 @@ function Player() {
             ctx.clearRect(0, 0, cwidth, cheight);
             for (var i = 0; i < meterNum; i++) {
                 var value = array[i * step]; //获取当前能量值
-                //把能量传出
-                myself.energy(value);
                 if (capYPositionArray.length < Math.round(meterNum)) {
                     capYPositionArray.push(value); //初始化保存帽头位置的数组，将第一个画面的数据压入其中
                 };
@@ -589,6 +587,8 @@ function Player() {
                 //开始绘制频谱条
                 ctx.fillStyle = gradient;
                 ctx.fillRect(i * 12, cheight - value + capHeight, meterWidth, cheight);
+                //把能量传出
+                myself.energy(value);
             }
             requestAnimationFrame(drawMeter);
         }
@@ -634,10 +634,10 @@ function Player() {
             analyser.getByteFrequencyData(array); //以下是根据频率数据画图
             ctx.clearRect(0, 0, width, height); //清除画布
             ctx.beginPath();
-            for (var i = 9; i < (array.length); i++) {
+            for (var i = 0; i < (array.length); i++) {
                 var value = array[i];
                 //绘制线根据能量值变化
-                ctx.lineTo(i * 7, value + 100);
+                ctx.lineTo(i * 9, value + 150);
                 //把能量传出
                 myself.energy(value);
             };
