@@ -1,5 +1,5 @@
-# HTML5VisualizationPlayer
-HTML5可视化播放器
+# HTML5可视化播放器
+## HTML5VisualizationPlayer
 <br>
 ![](https://poppinrubo.github.io/HTML5VisualizationPlayer/images/1.gif)
 
@@ -38,6 +38,7 @@ player外面可以用一个div包起来控制它的大小
     play.init({
         autoPlay: false,//自动播放,2018年1月谷歌浏览器不支持自动播放，设置true不能自动播放
         effect: 0,//频谱效果,不设置或0为随机变化,1为条形柱状,2为环状声波
+        color: null,//颜色 16进制颜色代码,不设置或设置为空(空字符或null)将随机使用默认颜色
         button: {//设置生成的控制按钮,不设置button默认全部创建
             prev: true,//上一首
             play: true,//播放,暂停
@@ -72,6 +73,18 @@ player外面可以用一个div包起来控制它的大小
         ]
     });
     
+```
+
+### 改变频谱效果
+    播放时如果想要改变效果调用下面方法
+    
+``` javascript
+    
+    player.change({
+        effect: 3,//效果 0 还原随机, 1 为条形柱状,2为环状声波,3 心电图效果
+        color: '#4395ff'//颜色 16进制颜色代码,不设置或设置为空(空字符或null)将随机使用默认颜色
+    });
+        
 ```
 
 * 注意事项

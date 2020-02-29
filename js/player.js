@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:1.2.0
+ * 版本号:1.3.0
  * Author：PoppinRubo
  * License: MIT
  */
@@ -35,21 +35,29 @@ function Player() {
     }
 
     //频谱配置初始化,外部调用就开始进行处理
-    this.init = function (Object) {
-        myself.playList = Object.playList || [{
+    this.init = function (object) {
+        myself.playList = object.playList || [{
             title: '播放列表为空',
             album: '',
             artist: '',
             mp3: ''
         }];
-        myself.autoPlay = Object.autoPlay || false;
-        myself.event = Object.event || myself.event;
-        myself.energy = Object.energy || myself.energy;
-        myself.button = Object.button || myself.button;
-        myself.effect = Object.effect || 0; //默认随机,效果为0表示随机切换效果
+        myself.autoPlay = object.autoPlay || false;
+        myself.event = object.event || myself.event;
+        myself.energy = object.energy || myself.energy;
+        myself.button = object.button || myself.button;
+        myself.color = object.color || null;
+        myself.effect = object.effect || 0; //默认随机,效果为0表示随机切换效果
         //记录是否处理过音频,保证createMediaElementSource只创建一次,多次创建会出现错误
         myself.handle = 0;
         createParts();
+    }
+
+    //改变效果
+    this.change = function (object) {
+        myself.effect = object.effect || 0;
+        myself.color = object.color || null;
+        drawSpectrum(myself.analyser);
     }
 
     //实例化一个音频类型window.AudioContext
@@ -275,7 +283,8 @@ function Player() {
         //事件传出
         myself.event({
             eventType: "play",
-            describe: "播放/暂停"
+            describe: "播放/暂停",
+            playing: !myself.audio.paused
         });
     }
 
@@ -501,8 +510,8 @@ function Player() {
         var colorArray = ['#f82466', '#00FFFF', '#AFFF7C', '#FFAA6A', '#6AD5FF', '#D26AFF', '#FF6AE6', '#FF6AB8', '#FF6A6A', "#7091FF"];
         //颜色随机数
         var colorRandom = Math.floor(Math.random() * colorArray.length);
-        //随机选取颜色
-        myself.color = colorArray[colorRandom];
+        //未设置将随机选取颜色
+        myself.colour = myself.color || colorArray[colorRandom];
         //图形数组
         var effectArray = [1, 2, 3];
         //效果随机数
@@ -565,7 +574,7 @@ function Player() {
             ctx = canvas.getContext('2d'),
             capYPositionArray = [], //将上一画面各帽头的位置保存到这个数组
             gradient = ctx.createLinearGradient(0, 0, 0, 300);
-        gradient.addColorStop(1, myself.color);
+        gradient.addColorStop(1, myself.colour);
         var drawMeter = function () {
             var array = new Uint8Array(analyser.frequencyBinCount);
             analyser.getByteFrequencyData(array);
@@ -610,7 +619,7 @@ function Player() {
                 ctx.beginPath();
                 ctx.arc(width / 2, height / 2, value * 0.8, 0, 400, false);
                 ctx.lineWidth = 2; //线圈粗细
-                ctx.strokeStyle = (1, colorRgb(myself.color, value / 1000)); //颜色透明度随值变化
+                ctx.strokeStyle = (1, colorRgb(myself.colour, value / 1000)); //颜色透明度随值变化
                 ctx.stroke(); //画空心圆
                 ctx.closePath();
                 //把能量传出
@@ -631,7 +640,7 @@ function Player() {
             var array = new Uint8Array(128); //长度为128无符号数组用于保存getByteFrequencyData返回的频域数据
             analyser.getByteFrequencyData(array); //以下是根据频率数据画图
             ctx.clearRect(0, 0, width, height); //清除画布
-            ctx.strokeStyle = myself.color;
+            ctx.strokeStyle = myself.colour;
             ctx.lineWidth = 2; //线粗细
             ctx.beginPath();
             for (var i = 0; i < (array.length); i++) {
