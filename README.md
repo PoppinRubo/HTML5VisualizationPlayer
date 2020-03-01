@@ -1,6 +1,7 @@
 # HTML5可视化播放器
-## HTML5VisualizationPlayer
+### HTML5VisualizationPlayer
 <br>
+
 ![](https://poppinrubo.github.io/HTML5VisualizationPlayer/images/1.gif)
 
 ![](https://poppinrubo.github.io/HTML5VisualizationPlayer/images/2.gif)
@@ -14,7 +15,7 @@ HTML5可视化播放器是一款能将音乐播放绘制出频谱的播放器
 
 <hr>
 
-`使用方法`
+### 使用方法
 
 <br>
 1、引入播放器player.css与player.js
@@ -34,10 +35,10 @@ player外面可以用一个div包起来控制它的大小
 
 ``` javascript
 
-    var play = new Player();
-    play.init({
-        autoPlay: false,//自动播放,2018年1月谷歌浏览器不支持自动播放，设置true不能自动播放
-        effect: 0,//频谱效果,不设置或0为随机变化,1为条形柱状,2为环状声波
+    var player = new Player();
+    player.init({
+        autoPlay: false,//自动播放,2018年1月谷歌浏览器不支持自动播放，谷歌浏览器设置true不能自动播放
+        effect: 0,//频谱效果,不设置或0为随机变化,1为条形柱状,2为环状声波,3 心电图效果
         color: null,//颜色 16进制颜色代码,不设置或设置为空(空字符或null)将随机使用默认颜色
         button: {//设置生成的控制按钮,不设置button默认全部创建
             prev: true,//上一首
@@ -87,7 +88,7 @@ player外面可以用一个div包起来控制它的大小
         
 ```
 
-* 注意事项
+### 注意事项
 <br>
     1、需要在服务器环境下
 <br>
