@@ -296,8 +296,9 @@ function Player() {
         songTitle.innerHTML = list[nowPlay].title;
         songTitle.title = "歌曲:" + list[nowPlay].title;
         var songAlbum = document.getElementById("album");
-        var albumTitle = list[nowPlay].album;
-        songAlbum.innerHTML = albumTitle ? "(" + albumTitle + ")" : '';
+        var albumTitle = list[nowPlay].album || '';
+        songAlbum.innerHTML = "(" + (albumTitle) + ")";
+        songAlbum.style.display = albumTitle ? 'block' : 'none';
         songAlbum.title = "所属专辑:" + albumTitle;
         var songArtist = document.getElementById("artist");
         var artistName = list[nowPlay].artist;
