@@ -491,6 +491,10 @@ function Player() {
 
     //播放处理,提取数据
     function playHandle() {
+        //IE浏览器不绘制频谱
+        if (!!window.ActiveXObject || "ActiveXObject" in window) {
+            return false;
+        }
         windowAudioContext();
         var audioContext = myself.audioContext;
         var analyser = audioContext.createAnalyser();
