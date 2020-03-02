@@ -1,7 +1,7 @@
 /**
  * HTML5 Audio Visualizer Player
  * HTML5音乐可视化播放器
- * 版本号:1.3.0
+ * 版本号:1.4.0
  * Author：PoppinRubo
  * License: MIT
  */
@@ -272,10 +272,15 @@ function Player() {
                 if (myself.handle == 0) {
                     playHandle();
                 }
+                //如果存在提示则移除
+                var tips = document.getElementsByClassName('visualizer-player-tips');
+                if (tips.length > 0) {
+                    myself.player.removeChild(tips[0]);
+                }
             }).catch(function () {
                 //处理浏览器不支持自动播放情况
                 var tips = document.createElement("div");
-                tips.className = 'player-tips';
+                tips.className = 'visualizer-player-tips';
                 tips.innerHTML = '浏览器不支持自动播放,点我开始播放';
                 tips.onclick = function () {
                     myself.player.removeChild(tips);

@@ -33,7 +33,7 @@
 .visualizer-player canvas {
   position: absolute;
 }
-.visualizer-player .player-tips {
+.visualizer-player .visualizer-player-tips {
   position: fixed;
   top: calc(50vh - 40px);
   text-align: center;
