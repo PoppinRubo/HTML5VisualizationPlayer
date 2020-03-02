@@ -247,7 +247,7 @@ function Player() {
     }
 
     //播放,暂停 控制
-    function play(autoPlay = false) {
+    function play() {
         var playBtn = document.getElementById("playControl");
         //播放控制
         if (myself.audio.paused) {
