@@ -15,6 +15,30 @@ HTML5可视化播放器是一款能将音乐播放绘制出频谱的播放器
 
 <hr>
 
+### 浏览器支持情况
+<table>
+    <tr>
+        <td>浏览器</td>
+        <td>是否支持</td>
+    </tr>
+    <tr>
+        <td>谷歌</td>
+        <td>支持</td>
+    </tr>
+    <tr>
+        <td>火狐</td>
+        <td>支持</td>
+    </tr>
+    <tr>
+        <td>IE</td>
+        <td>支持(不支持AudioContext对象看不到频谱)</td>
+    </tr>
+    <tr>
+        <td>Edge</td>
+        <td>支持</td>
+    </tr>
+</table>
+    
 ### 使用方法
 
 <br>
