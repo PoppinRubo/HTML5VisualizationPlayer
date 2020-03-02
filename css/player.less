@@ -41,6 +41,23 @@
         position: absolute;
     }
 
+    .player-tips {
+        position: fixed;
+        top: calc(50vh - 40px);
+        text-align: center;
+        line-height: 30px;
+        left: 0;
+        right: 0;
+        width: 300px;
+        height: 30px;
+        margin: 0 auto;
+        background-color: #272822;
+        border-radius: 3px;
+        cursor: pointer;
+        padding: 5px;
+        font-size: 14px;
+    }
+
     .player-control {
         position: absolute;
         height: 32px;
@@ -121,7 +138,8 @@
             font-weight: bold;
             margin: 0 5px;
         }
-        .player-state{
+
+        .player-state {
             position: absolute;
             z-index: 100;
             width: 100%;
@@ -131,6 +149,7 @@
             background: #272822;
             border-radius: 4px;
         }
+
         #songTitle,
         #artist,
         #album,

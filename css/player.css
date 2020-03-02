@@ -33,6 +33,22 @@
 .visualizer-player canvas {
   position: absolute;
 }
+.visualizer-player .player-tips {
+  position: fixed;
+  top: calc(50vh - 40px);
+  text-align: center;
+  line-height: 30px;
+  left: 0;
+  right: 0;
+  width: 300px;
+  height: 30px;
+  margin: 0 auto;
+  background-color: #272822;
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 14px;
+}
 .visualizer-player .player-control {
   position: absolute;
   height: 32px;

@@ -81,6 +81,7 @@ function Player() {
         var player = document.getElementsByTagName("player")[0];
         player.className = 'visualizer-player';
         player.appendChild(audio);
+        myself.player = player;
         myself.audio = audio;
 
         //音乐部件
@@ -251,25 +252,38 @@ function Player() {
         var playBtn = document.getElementById("playControl");
         //播放控制
         if (myself.audio.paused) {
-            myself.audio.play();
-            //字符图标变化
-            if (playBtn) {
-                playBtn.setAttribute("data", "play");
-                playBtn.title = "暂停";
-                playBtn.innerHTML = "&#xea1d;";
-            }
-            timer = setInterval(function () {
-                //显示时长
-                showTime();
-                //获取就绪状态并处理相应
-                playerState();
-            }, 1000);
-            //播放媒体信息更新
-            updates();
-            //处理播放数据,处理过就不再处理
-            if (myself.handle == 0) {
-                playHandle();
-            }
+            var playing = myself.audio.play();
+            playing.then(function () {
+                //字符图标变化
+                if (playBtn) {
+                    playBtn.setAttribute("data", "play");
+                    playBtn.title = "暂停";
+                    playBtn.innerHTML = "&#xea1d;";
+                }
+                timer = setInterval(function () {
+                    //显示时长
+                    showTime();
+                    //获取就绪状态并处理相应
+                    playerState();
+                }, 1000);
+                //播放媒体信息更新
+                updates();
+                //处理播放数据,处理过就不再处理
+                if (myself.handle == 0) {
+                    playHandle();
+                }
+            }).catch(function () {
+                //处理浏览器不支持自动播放情况
+                var tips = document.createElement("div");
+                tips.className = 'player-tips';
+                tips.innerHTML = '浏览器不支持自动播放,点我开始播放';
+                tips.onclick = function () {
+                    myself.player.removeChild(tips);
+                    play();
+                };
+                myself.player.appendChild(tips);
+                return false;
+            })
         } else {
             myself.audio.pause();
             //字符图标变化
