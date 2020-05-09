@@ -3,6 +3,7 @@
  * HTML5音乐可视化播放器
  * 版本号:1.4.0
  * Author：PoppinRubo
+ * Github：https://github.com/PoppinRubo/HTML5VisualizationPlayer
  * License: MIT
  */
 
